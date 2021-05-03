@@ -25,9 +25,34 @@ namespace Tetris
         const string Developer = "Grimakar";
         const string TimeOfDevelopment = "May 2021";
 
+        const int SquareSize = 30;
+        const int FieldSizeX = 10; //horizontal
+        const int FieldSizeY = 18; //vertical
+
         public MainWindow()
         {
             InitializeComponent();
+            for (int j = 0; j < 9; j++)
+            {
+                if (j %2==0)
+                for (int i = 0; i < 10; i++)
+                {
+                    PaintSquare(i, i + j, Brushes.DarkOrange);
+                }
+                if (j % 2 == 1)
+                    for (int i = 0; i < 10; i++)
+                {
+                    PaintSquare(i, i + j, Brushes.Green);
+                }
+            }
+        }
+
+        public void PaintSquare(int x, int y, Brush brush)
+        {
+            Rectangle rectangle = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 3, RadiusY = 3 };
+            rectangle.Fill = brush;
+            rectangle.Margin = new Thickness(x * SquareSize, y * SquareSize, 0, 0);
+            PlayingField.Children.Add(rectangle);
         }
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)

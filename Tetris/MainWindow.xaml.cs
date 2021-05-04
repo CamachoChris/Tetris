@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TetrisModel;
 
 namespace Tetris
 {
@@ -32,24 +33,48 @@ namespace Tetris
         public MainWindow()
         {
             InitializeComponent();
-            for (int j = 0; j < 9; j++)
+            Tetromino tetromino = new Tetromino();
+            tetromino.CreateRandomTetro();
+            PaintTetromino(tetromino, 0, 0, Brushes.Blue);
+            tetromino.RotateLeft();
+            PaintTetromino(tetromino, 5, 0, Brushes.Green);
+            tetromino.RotateLeft();
+            PaintTetromino(tetromino, 0, 5, Brushes.Green);
+            tetromino.RotateLeft();
+            PaintTetromino(tetromino, 5, 5, Brushes.Green);
+            tetromino.RotateRight();
+            PaintTetromino(tetromino, 0, 10, Brushes.Red);
+            tetromino.RotateRight();
+            PaintTetromino(tetromino, 5, 10, Brushes.Red);
+            tetromino.RotateRight();
+            PaintTetromino(tetromino, 0, 15, Brushes.Red);
+            tetromino.RotateRight();
+            PaintTetromino(tetromino, 5, 15, Brushes.Red);
+
+        }
+
+        public void PaintTetromino(Tetromino tetromino, int x, int y, Brush brush)
+        {
+            for (int i = 0; i < 4; i++)
             {
-                if (j %2==0)
-                for (int i = 0; i < 10; i++)
+                for (int j = 0; j < 4; j++)
                 {
-                    PaintSquare(i, i + j, Brushes.DarkOrange);
-                }
-                if (j % 2 == 1)
-                    for (int i = 0; i < 10; i++)
-                {
-                    PaintSquare(i, i + j, Brushes.Green);
+                    if (tetromino.Position[j, i] == true && IsInField(x + j, y + i))
+                        PaintSquare(x + j, y + i, brush);
                 }
             }
         }
 
+        private bool IsInField(int x, int y)
+        {
+            if ((x >= 0) && (y >= 0) && (x < FieldSizeX) && (y < FieldSizeY))
+                return true;
+            return false;
+        }
+
         public void PaintSquare(int x, int y, Brush brush)
         {
-            Rectangle rectangle = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 3, RadiusY = 3 };
+            Rectangle rectangle = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 4, RadiusY = 4 };
             rectangle.Fill = brush;
             rectangle.Margin = new Thickness(x * SquareSize, y * SquareSize, 0, 0);
             PlayingField.Children.Add(rectangle);

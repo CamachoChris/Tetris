@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris"
         mc:Ignorable="d"
-        Title="Tetris" Height="620" Width="400" Background="LightSkyBlue">
+        Title="Tetris" Height="620" Width="400" Background="LightSkyBlue" KeyDown="Window_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -19,7 +19,7 @@
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1">
-            <Canvas x:Name="PlayingField" Height="540" Width="300" Background="AliceBlue"/>
+            <Canvas x:Name="PlayingCanvas" Height="540" Width="300" Background="AliceBlue"/>
         </Grid>
     </Grid>
 </Window>

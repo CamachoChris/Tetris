@@ -37,39 +37,20 @@ namespace Tetris
         const int FieldSizeX = 10; //horizontal
         const int FieldSizeY = 18; //vertical
 
+        PlayingFieldModel TetrisField = new PlayingFieldModel(FieldSizeX, FieldSizeY);
+
         public MainWindow()
         {
             InitializeComponent();
-            TetrominoModel tetromino1 = new TetrominoModel();
-            tetromino1.CreateRandomTetri();
-            PaintTetromino(tetromino1, 0, 1, ColorI);
-            TetrominoModel tetromino2 = new TetrominoModel();
-            tetromino2.CreateRandomTetri();
-            PaintTetromino(tetromino2, 5, 1, ColorO);
-            TetrominoModel tetromino3 = new TetrominoModel();
-            tetromino3.CreateRandomTetri();
-            PaintTetromino(tetromino3, 0, 6, ColorL);
-            TetrominoModel tetromino4 = new TetrominoModel();
-            tetromino4.CreateRandomTetri();
-            PaintTetromino(tetromino4, 5, 6, ColorJ);
-            TetrominoModel tetromino5 = new TetrominoModel();
-            tetromino5.CreateRandomTetri();
-            PaintTetromino(tetromino5, 0, 11, ColorS);
-            TetrominoModel tetromino6 = new TetrominoModel();
-            tetromino6.CreateRandomTetri();
-            PaintTetromino(tetromino6, 5, 11, ColorZ);
-
+            PaintTetromino(TetrisField.GetTetri(), ColorI);
         }
 
-        public void PaintTetromino(TetrominoModel tetromino, int x, int y, Brush brush)
+        public void PaintTetromino(Coord[] tetri, Brush brush)
         {
             for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < 4; j++)
-                {
-                    if (tetromino.Position[j, i] == true && IsInField(x + j, y + i))
-                        PaintSquare(x + j, y + i, brush);
-                }
+                if (IsInField(tetri[i].X, tetri[i].Y))
+                    PaintSquare(tetri[i].X, tetri[i].Y, brush);
             }
         }
 
@@ -85,7 +66,7 @@ namespace Tetris
             Rectangle rectangle = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 4, RadiusY = 4 };
             rectangle.Fill = brush;
             rectangle.Margin = new Thickness(x * SquareSize, y * SquareSize, 0, 0);
-            PlayingField.Children.Add(rectangle);
+            PlayingCanvas.Children.Add(rectangle);
         }
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
@@ -96,6 +77,19 @@ namespace Tetris
         private void MenuQuit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.S:
+                    TetrisField.MoveDown();
+                    PaintTetromino(TetrisField.GetTetri(), ColorI);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

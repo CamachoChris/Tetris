@@ -4,6 +4,11 @@ using System.Text;
 
 namespace TetrisModel
 {
+    public struct Coord
+    {
+        public int X;
+        public int Y;
+    }
     public partial class TetrominoModel
     {
         public enum Tetri
@@ -11,11 +16,6 @@ namespace TetrisModel
             I, O, L, J, S, Z
         }
 
-        struct Coord
-        {
-            public int X;
-            public int Y;
-        }
         private readonly Coord[] I = {
             new Coord() { X = 2, Y = 0 },
             new Coord() { X = 2, Y = 1 },

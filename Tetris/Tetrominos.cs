@@ -15,7 +15,7 @@ namespace TetrisModel
             CreateStandardTetri(tetri);
         }
 
-        public void CreateRandomTetri()
+        public void BeRandomTetri()
         {
             Random rnd = new Random();
             int nextTetri = rnd.Next(6);
@@ -52,6 +52,23 @@ namespace TetrisModel
             Position = rotated;
         }
 
+        public Coord[] ConvertTetri()
+        {
+            Coord[] tetri = new Coord[4];
+            int count = 0;
+            for (int y = 0; y < 4; y++)
+                for (int x = 0; x < 4; x++)
+                {
+                    if (Position[x, y] == true)
+                    {
+                        tetri[count].X = x;
+                        tetri[count].Y = y;
+                        count++;
+                    }
+                    if (count == 4) return tetri;
+                }
+            return tetri;
+        }
         private void CreateStandardTetri(Tetri tetri)
         {
             switch (tetri)

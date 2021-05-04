@@ -37,36 +37,14 @@ namespace Tetris
         const int FieldSizeX = 10; //horizontal
         const int FieldSizeY = 18; //vertical
 
-        PlayingFieldModel TetrisField = new PlayingFieldModel(FieldSizeX, FieldSizeY);
+        PlayingFieldModel FieldModel = new PlayingFieldModel(FieldSizeX, FieldSizeY);
+        PlayingFieldView FieldView;
 
         public MainWindow()
         {
             InitializeComponent();
-            PaintTetromino(TetrisField.GetTetri(), ColorI);
-        }
-
-        public void PaintTetromino(Coord[] tetri, Brush brush)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                if (IsInField(tetri[i].X, tetri[i].Y))
-                    PaintSquare(tetri[i].X, tetri[i].Y, brush);
-            }
-        }
-
-        private bool IsInField(int x, int y)
-        {
-            if ((x >= 0) && (y >= 0) && (x < FieldSizeX) && (y < FieldSizeY))
-                return true;
-            return false;
-        }
-
-        public void PaintSquare(int x, int y, Brush brush)
-        {
-            Rectangle rectangle = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 4, RadiusY = 4 };
-            rectangle.Fill = brush;
-            rectangle.Margin = new Thickness(x * SquareSize, y * SquareSize, 0, 0);
-            PlayingCanvas.Children.Add(rectangle);
+            FieldView = new PlayingFieldView(PlayingCanvas, FieldModel, SquareSize);
+            
         }
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
@@ -84,8 +62,8 @@ namespace Tetris
             switch (e.Key)
             {
                 case Key.S:
-                    TetrisField.MoveDown();
-                    PaintTetromino(TetrisField.GetTetri(), ColorI);
+                    FieldModel.MoveDown();
+                    FieldView.PaintCurrentTetri();
                     break;
                 default:
                     break;

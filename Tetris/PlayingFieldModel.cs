@@ -25,7 +25,7 @@ namespace TetrisModel
             TetriPositionX = FieldSizeX / 2 - 2;
             TetriPositionY = -2;
         }
-        public Coord[] GetTetri()
+        public Coord[] GetCurrentTetri()
         {
             Coord[] fieldTetri = CurrentTetri.ConvertTetri();
             for (int i = 0; i < 4; i++)

@@ -26,6 +26,13 @@ namespace Tetris
         const string Developer = "Grimakar";
         const string TimeOfDevelopment = "May 2021";
 
+        readonly Brush ColorI = Brushes.Gold;
+        readonly Brush ColorO = Brushes.DarkRed;
+        readonly Brush ColorL = Brushes.MediumSeaGreen;
+        readonly Brush ColorJ = Brushes.CornflowerBlue;
+        readonly Brush ColorS = Brushes.Crimson;
+        readonly Brush ColorZ = Brushes.DarkOrchid;
+
         const int SquareSize = 30;
         const int FieldSizeX = 10; //horizontal
         const int FieldSizeY = 18; //vertical
@@ -33,27 +40,22 @@ namespace Tetris
         public MainWindow()
         {
             InitializeComponent();
-            Tetromino tetromino = new Tetromino();
-            tetromino.CreateRandomTetro();
-            PaintTetromino(tetromino, 0, 0, Brushes.Blue);
-            tetromino.RotateLeft();
-            PaintTetromino(tetromino, 5, 0, Brushes.Green);
-            tetromino.RotateLeft();
-            PaintTetromino(tetromino, 0, 5, Brushes.Green);
-            tetromino.RotateLeft();
-            PaintTetromino(tetromino, 5, 5, Brushes.Green);
-            tetromino.RotateRight();
-            PaintTetromino(tetromino, 0, 10, Brushes.Red);
-            tetromino.RotateRight();
-            PaintTetromino(tetromino, 5, 10, Brushes.Red);
-            tetromino.RotateRight();
-            PaintTetromino(tetromino, 0, 15, Brushes.Red);
-            tetromino.RotateRight();
-            PaintTetromino(tetromino, 5, 15, Brushes.Red);
+            TetrominoModel tetrominoI = new TetrominoModel(TetrominoModel.Tetri.I);
+            PaintTetromino(tetrominoI, 0, 1, ColorI);
+            TetrominoModel tetrominoO = new TetrominoModel(TetrominoModel.Tetri.O);
+            PaintTetromino(tetrominoO, 5, 1, ColorO);
+            TetrominoModel tetrominoL = new TetrominoModel(TetrominoModel.Tetri.L);
+            PaintTetromino(tetrominoL, 0, 6, ColorL);
+            TetrominoModel tetrominoJ = new TetrominoModel(TetrominoModel.Tetri.J);
+            PaintTetromino(tetrominoJ, 5, 6, ColorJ);
+            TetrominoModel tetrominoS = new TetrominoModel(TetrominoModel.Tetri.S);
+            PaintTetromino(tetrominoS, 0, 11, ColorS);
+            TetrominoModel tetrominoZ = new TetrominoModel(TetrominoModel.Tetri.Z);
+            PaintTetromino(tetrominoZ, 5, 11, ColorZ);
 
         }
 
-        public void PaintTetromino(Tetromino tetromino, int x, int y, Brush brush)
+        public void PaintTetromino(TetrominoModel tetromino, int x, int y, Brush brush)
         {
             for (int i = 0; i < 4; i++)
             {

@@ -5,15 +5,19 @@ using System.Diagnostics;
 
 namespace TetrisModel
 {
-    public class Tetromino
+    public partial class TetrominoModel
     {
-        public bool[,] Position { get; private set; }
+        public bool[,] Position { get; private set; } = new bool[4, 4];
 
-        
-
-        public Tetromino()
+        public TetrominoModel() {}
+        public TetrominoModel(Tetri tetri)
         {
-            Position = new bool[4, 4];
+            CreateStandardTetri(tetri);
+        }
+
+        public void CreateTetri()
+        {
+            CreateStandardTetri(Tetri.Z);
         }
 
         public void RotateLeft()
@@ -42,7 +46,42 @@ namespace TetrisModel
             Position = rotated;
         }
 
-        public void CreateRandomTetro()
+        private void CreateStandardTetri(Tetri tetri)
+        {
+            switch (tetri)
+            {
+                case Tetri.I:
+                    CopyStandardTetri(I);
+                    break;
+                case Tetri.O:
+                    CopyStandardTetri(O);
+                    break;
+                case Tetri.L:
+                    CopyStandardTetri(L);
+                    break;
+                case Tetri.J:
+                    CopyStandardTetri(J);
+                    break;
+                case Tetri.S:
+                    CopyStandardTetri(S);
+                    break;
+                case Tetri.Z:
+                    CopyStandardTetri(Z);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void CopyStandardTetri(Coord[] tetri)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Position[tetri[i].X, tetri[i].Y] = true;
+            }
+        }
+
+        private void CreateRandomTetro()
         {
             Random rnd = new Random();
             Position[2, 2] = true;

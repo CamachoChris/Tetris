@@ -23,7 +23,7 @@ namespace TetrisModel
             NextTetri.BeRandomTetri();
 
             TetriPositionX = FieldSizeX / 2 - 2;
-            TetriPositionY = -2;
+            TetriPositionY = -3;
         }
         public Coord[] GetCurrentTetri()
         {
@@ -42,6 +42,14 @@ namespace TetrisModel
         public void MoveDown()
         {
             TetriPositionY++;
+        }
+        public void MoveLeft()
+        {
+            TetriPositionX--;
+        }
+        public void MoveRight()
+        {
+            TetriPositionX++;
         }
     }
 }

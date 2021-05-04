@@ -39,15 +39,22 @@ namespace Tetris
             SquareSize = squaresize;
             for (int i = 0; i < 4; i++)
             {
-                currentTetri[i] = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 4, RadiusY = 4 };
+                currentTetri[i] = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 5, RadiusY = 5 };
                 TetrisCanvas.Children.Add(currentTetri[i]);
                 currentTetri[i].Fill = ColorO;
             }
         }
+
+        public void Start()
+        {
+
+        }
+
         public void PaintCurrentTetri()
         {
             PaintTetromino(TetrisFieldModel.GetCurrentTetri());
         }
+
         public void PaintTetromino(Coord[] tetri)
         {
             for (int i = 0; i < 4; i++)
@@ -65,6 +72,5 @@ namespace Tetris
                 return true;
             return false;
         }
-
     }
 }

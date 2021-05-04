@@ -26,13 +26,6 @@ namespace Tetris
         const string Developer = "Grimakar";
         const string TimeOfDevelopment = "May 2021";
 
-        readonly Brush ColorI = Brushes.Gold;
-        readonly Brush ColorO = Brushes.DarkRed;
-        readonly Brush ColorL = Brushes.MediumSeaGreen;
-        readonly Brush ColorJ = Brushes.CornflowerBlue;
-        readonly Brush ColorS = Brushes.Crimson;
-        readonly Brush ColorZ = Brushes.DarkOrchid;
-
         const int SquareSize = 30;
         const int FieldSizeX = 10; //horizontal
         const int FieldSizeY = 18; //vertical
@@ -65,7 +58,21 @@ namespace Tetris
                     FieldModel.MoveDown();
                     FieldView.PaintCurrentTetri();
                     break;
-                default:
+                case Key.A:
+                    FieldModel.MoveLeft();
+                    FieldView.PaintCurrentTetri();
+                    break;
+                case Key.D:
+                    FieldModel.MoveRight();
+                    FieldView.PaintCurrentTetri();
+                    break;
+                case Key.Q:
+                    FieldModel.CurrentTetri.RotateLeft();
+                    FieldView.PaintCurrentTetri();
+                    break;
+                case Key.E:
+                    FieldModel.CurrentTetri.RotateRight();
+                    FieldView.PaintCurrentTetri();
                     break;
             }
         }

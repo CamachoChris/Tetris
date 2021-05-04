@@ -15,6 +15,18 @@ namespace TetrisModel
             CreateStandardTetri(tetri);
         }
 
+        public TetrominoModel GetCopy()
+        {
+            TetrominoModel newTetri = new TetrominoModel();
+            newTetri.TetriType = this.TetriType;
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                {
+                    newTetri.Position[i, j] = this.Position[i, j];
+                }
+            return newTetri;
+        }
+
         public void BeRandomTetri()
         {
             Random rnd = new Random();
@@ -24,6 +36,10 @@ namespace TetrisModel
             int randRotate = rnd.Next(4);
             for (int i = 0; i < randRotate; i++)            
                 RotateRight();                       
+        }
+        public void BeStandardTetri(Tetri tetri)
+        {
+            CreateStandardTetri(tetri);
         }
 
         public void RotateLeft()

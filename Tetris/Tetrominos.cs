@@ -8,7 +8,7 @@ namespace TetrisModel
     public partial class TetrominoModel
     {
         public bool[,] Position { get; private set; } = new bool[4, 4];
-
+        public Tetri TetriType;
         public TetrominoModel() {}
         public TetrominoModel(Tetri tetri)
         {
@@ -75,23 +75,27 @@ namespace TetrisModel
             {
                 case Tetri.I:
                     CopyStandardTetri(I);
+                    TetriType = Tetri.I;
                     break;
                 case Tetri.O:
                     CopyStandardTetri(O);
+                    TetriType = Tetri.O;
                     break;
                 case Tetri.L:
                     CopyStandardTetri(L);
+                    TetriType = Tetri.L;
                     break;
                 case Tetri.J:
                     CopyStandardTetri(J);
+                    TetriType = Tetri.J;
                     break;
                 case Tetri.S:
                     CopyStandardTetri(S);
+                    TetriType = Tetri.S;
                     break;
                 case Tetri.Z:
                     CopyStandardTetri(Z);
-                    break;
-                default:
+                    TetriType = Tetri.Z;
                     break;
             }
         }

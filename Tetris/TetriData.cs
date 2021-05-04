@@ -9,12 +9,12 @@ namespace TetrisModel
         public int X;
         public int Y;
     }
+    public enum Tetri
+    {
+        I, O, L, J, S, Z
+    }
     public partial class TetrominoModel
     {
-        public enum Tetri
-        {
-            I, O, L, J, S, Z
-        }
 
         private readonly Coord[] I = {
             new Coord() { X = 2, Y = 0 },

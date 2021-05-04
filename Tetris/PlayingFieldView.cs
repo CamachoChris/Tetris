@@ -25,9 +25,9 @@ namespace Tetris
         readonly Brush ColorS = Brushes.Crimson;
         readonly Brush ColorZ = Brushes.DarkOrchid;
 
-        int SquareSize;
+        readonly int SquareSize;
 
-        Canvas TetrisCanvas;
+        readonly Canvas TetrisCanvas;
         public PlayingFieldModel TetrisFieldModel;
         private Rectangle[] currentTetri;
 
@@ -40,14 +40,14 @@ namespace Tetris
             for (int i = 0; i < 4; i++)
             {
                 currentTetri[i] = new Rectangle() { Height = SquareSize, Width = SquareSize, RadiusX = 5, RadiusY = 5 };
+                currentTetri[i].Fill = Brushes.Transparent;
                 TetrisCanvas.Children.Add(currentTetri[i]);
-                currentTetri[i].Fill = ColorO;
             }
         }
 
         public void Start()
         {
-
+            PaintCurrentTetri();
         }
 
         public void PaintCurrentTetri()
@@ -63,14 +63,25 @@ namespace Tetris
 
         public void PaintSquare(Rectangle rectangle, int x, int y)
         {
+            if (y >= 0)
+                rectangle.Fill = GetTetriColor(TetrisFieldModel.CurrentTetri.TetriType);
+            else
+                rectangle.Fill = Brushes.Transparent;
             rectangle.Margin = new Thickness(x * SquareSize, y * SquareSize, 0, 0);
         }
 
-        private bool IsInField(int x, int y)
+        private Brush GetTetriColor(Tetri tetri)
         {
-            if ((x >= 0) && (y >= 0) && (x < TetrisFieldModel.FieldSizeX) && (y < TetrisFieldModel.FieldSizeY))
-                return true;
-            return false;
+            return tetri switch
+            {
+                Tetri.I => ColorI,
+                Tetri.O => ColorO,
+                Tetri.L => ColorL,
+                Tetri.J => ColorJ,
+                Tetri.S => ColorS,
+                Tetri.Z => ColorZ,
+                _ => Brushes.Transparent,
+            };
         }
     }
 }

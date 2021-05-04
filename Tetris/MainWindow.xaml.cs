@@ -30,14 +30,15 @@ namespace Tetris
         const int FieldSizeX = 10; //horizontal
         const int FieldSizeY = 18; //vertical
 
-        PlayingFieldModel FieldModel = new PlayingFieldModel(FieldSizeX, FieldSizeY);
+        PlayingFieldModel FieldModel;
         PlayingFieldView FieldView;
 
         public MainWindow()
         {
             InitializeComponent();
+            FieldModel = new PlayingFieldModel(FieldSizeX, FieldSizeY);
             FieldView = new PlayingFieldView(PlayingCanvas, FieldModel, SquareSize);
-            
+            FieldView.Start();
         }
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)

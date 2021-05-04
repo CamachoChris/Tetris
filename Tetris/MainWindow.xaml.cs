@@ -40,18 +40,24 @@ namespace Tetris
         public MainWindow()
         {
             InitializeComponent();
-            TetrominoModel tetrominoI = new TetrominoModel(TetrominoModel.Tetri.I);
-            PaintTetromino(tetrominoI, 0, 1, ColorI);
-            TetrominoModel tetrominoO = new TetrominoModel(TetrominoModel.Tetri.O);
-            PaintTetromino(tetrominoO, 5, 1, ColorO);
-            TetrominoModel tetrominoL = new TetrominoModel(TetrominoModel.Tetri.L);
-            PaintTetromino(tetrominoL, 0, 6, ColorL);
-            TetrominoModel tetrominoJ = new TetrominoModel(TetrominoModel.Tetri.J);
-            PaintTetromino(tetrominoJ, 5, 6, ColorJ);
-            TetrominoModel tetrominoS = new TetrominoModel(TetrominoModel.Tetri.S);
-            PaintTetromino(tetrominoS, 0, 11, ColorS);
-            TetrominoModel tetrominoZ = new TetrominoModel(TetrominoModel.Tetri.Z);
-            PaintTetromino(tetrominoZ, 5, 11, ColorZ);
+            TetrominoModel tetromino1 = new TetrominoModel();
+            tetromino1.CreateRandomTetri();
+            PaintTetromino(tetromino1, 0, 1, ColorI);
+            TetrominoModel tetromino2 = new TetrominoModel();
+            tetromino2.CreateRandomTetri();
+            PaintTetromino(tetromino2, 5, 1, ColorO);
+            TetrominoModel tetromino3 = new TetrominoModel();
+            tetromino3.CreateRandomTetri();
+            PaintTetromino(tetromino3, 0, 6, ColorL);
+            TetrominoModel tetromino4 = new TetrominoModel();
+            tetromino4.CreateRandomTetri();
+            PaintTetromino(tetromino4, 5, 6, ColorJ);
+            TetrominoModel tetromino5 = new TetrominoModel();
+            tetromino5.CreateRandomTetri();
+            PaintTetromino(tetromino5, 0, 11, ColorS);
+            TetrominoModel tetromino6 = new TetrominoModel();
+            tetromino6.CreateRandomTetri();
+            PaintTetromino(tetromino6, 5, 11, ColorZ);
 
         }
 

@@ -15,9 +15,15 @@ namespace TetrisModel
             CreateStandardTetri(tetri);
         }
 
-        public void CreateTetri()
+        public void CreateRandomTetri()
         {
-            CreateStandardTetri(Tetri.Z);
+            Random rnd = new Random();
+            int nextTetri = rnd.Next(6);
+            CreateStandardTetri((Tetri)nextTetri);
+
+            int randRotate = rnd.Next(4);
+            for (int i = 0; i < randRotate; i++)            
+                RotateRight();                       
         }
 
         public void RotateLeft()

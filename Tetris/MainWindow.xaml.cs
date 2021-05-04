@@ -68,11 +68,11 @@ namespace Tetris
                     FieldView.PaintCurrentTetri();
                     break;
                 case Key.Q:
-                    FieldModel.CurrentTetri.RotateLeft();
+                    FieldModel.RotateLeft();
                     FieldView.PaintCurrentTetri();
                     break;
                 case Key.E:
-                    FieldModel.CurrentTetri.RotateRight();
+                    FieldModel.RotateRight();
                     FieldView.PaintCurrentTetri();
                     break;
             }

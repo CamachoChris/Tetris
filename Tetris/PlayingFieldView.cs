@@ -52,7 +52,7 @@ namespace Tetris
 
         public void PaintCurrentTetri()
         {
-            PaintTetromino(TetrisFieldModel.GetCurrentTetri());
+            PaintTetromino(TetrisFieldModel.LocateCurrentTetri());
         }
 
         public void PaintTetromino(Coord[] tetri)
@@ -64,7 +64,7 @@ namespace Tetris
         public void PaintSquare(Rectangle rectangle, int x, int y)
         {
             if (y >= 0)
-                rectangle.Fill = GetTetriColor(TetrisFieldModel.CurrentTetri.TetriType);
+                rectangle.Fill = GetTetriColor(TetrisFieldModel.GetCurrentTetriType());
             else
                 rectangle.Fill = Brushes.Transparent;
             rectangle.Margin = new Thickness(x * SquareSize, y * SquareSize, 0, 0);

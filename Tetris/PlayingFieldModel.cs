@@ -9,8 +9,8 @@ namespace TetrisModel
         public int FieldSizeX { get; private set; }
         public int FieldSizeY { get; private set; }
 
-        public TetrominoModel CurrentTetri = new TetrominoModel();
-        public TetrominoModel NextTetri = new TetrominoModel();
+        private TetrominoModel CurrentTetri = new TetrominoModel(); 
+        private TetrominoModel NextTetri = new TetrominoModel();
 
         public int TetriPositionX { get; private set; }
         public int TetriPositionY { get; private set; }
@@ -23,33 +23,70 @@ namespace TetrisModel
             NextTetri.BeRandomTetri();
 
             TetriPositionX = FieldSizeX / 2 - 2;
-            TetriPositionY = -3;
+            TetriPositionY = -4;
         }
-        public Coord[] GetCurrentTetri()
+
+        public Tetri GetCurrentTetriType()
+        {
+            return CurrentTetri.TetriType;
+        }
+
+        public Coord[] LocateCurrentTetri()
         {
             Coord[] fieldTetri = CurrentTetri.ConvertTetri();
             for (int i = 0; i < 4; i++)
             {
-                int tmpX = fieldTetri[i].X;
-                int tmpY = fieldTetri[i].Y;
                 fieldTetri[i].X = fieldTetri[i].X + TetriPositionX;
                 fieldTetri[i].Y = fieldTetri[i].Y + TetriPositionY;
-                int tmpafterX = fieldTetri[i].X;
-                int tmpafterY = fieldTetri[i].Y;
             }
             return fieldTetri;
         }
+        private bool LeftCollision()
+        {
+            Coord[] current = LocateCurrentTetri();
+            for (int i = 0; i < 4; i++)
+                if (current[i].X == 0)
+                    return true;
+            return false;
+        }
+        private bool RightCollision()
+        {
+            Coord[] current = LocateCurrentTetri();
+            for (int i = 0; i < 4; i++)
+                if (current[i].X == FieldSizeX - 1)
+                    return true;
+            return false;
+        }
+        private bool BottomCollision()
+        {
+            Coord[] current = LocateCurrentTetri();
+            for (int i = 0; i < 4; i++)
+                if (current[i].Y == FieldSizeY - 1)
+                    return true;
+            return false;
+        }
         public void MoveDown()
         {
-            TetriPositionY++;
+            if (!BottomCollision())
+                TetriPositionY++;
         }
         public void MoveLeft()
         {
-            TetriPositionX--;
+            if (!LeftCollision())
+                TetriPositionX--;
         }
         public void MoveRight()
         {
-            TetriPositionX++;
+            if (!RightCollision())
+                TetriPositionX++;
+        }
+        public void RotateRight()
+        {
+            CurrentTetri.RotateRight();
+        }
+        public void RotateLeft()
+        {
+            CurrentTetri.RotateLeft();
         }
     }
 }

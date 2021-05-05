@@ -60,21 +60,26 @@ namespace TetrisModel
         }
 
         /// <summary>
-        /// Returns the distance of the left and right border.
+        /// Returns the distance of the left and right border. For bottom collision only bool relevant.
         /// </summary>
         /// <param name="tetri"></param>
         /// <param name="positionX"></param>
         /// <param name="positionY"></param>
         /// <returns>negative value = how deep through the border. 0 = directly at the border, still inside. 1 = rest of field.</returns>
-        private int SideCollisionDetection(TetrominoModel tetri, int positionX, int positionY)
+        private (bool rotateable, int distance) CollisionDetection(TetrominoModel tetri, int positionX, int positionY)
         {
+            bool rotateable = true;
             int distance = 1;
             var (minX, maxX, minY, maxY) = tetri.GetRange();
             if (minX + positionX <= 0)
                 distance = minX + positionX;
             else if (maxX + positionX >= FieldSizeX - 1)
                 distance = FieldSizeX - 1 - (maxX + positionX);
-            return distance;
+
+            if (maxY + positionY >= FieldSizeY)
+                rotateable = false;
+
+            return (rotateable, distance);
         }
 
         private bool BottomCollision(TetrominoModel tetri, int fieldX, int fieldY)
@@ -85,17 +90,17 @@ namespace TetrisModel
                     return true;
             return false;
         }
-        private int LeftRotationCollision()
+        private (bool rotateable, int distance) LeftRotationCollision()
         {
             TetrominoModel tmp = CurrentTetri.GetCopy();
             tmp.RotateLeft();
-            return SideCollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            return CollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
-        private int RightRotationCollision()
+        private (bool rotateable, int distance) RightRotationCollision()
         {
             TetrominoModel tmp = CurrentTetri.GetCopy();
             tmp.RotateRight();
-            return SideCollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            return CollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
         public void MoveDown()
@@ -113,33 +118,41 @@ namespace TetrisModel
         }
         public void MoveLeft()
         {
-            if (CurrentTetri.PositionX > 0 || SideCollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY) == 1)
+            var (rotateable, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            if (CurrentTetri.PositionX > 0 || distance == 1)
                 CurrentTetri.PositionX--;
         }
         public void MoveRight()
         {
-            if (CurrentTetri.PositionX < FieldSizeX - 4 || SideCollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY) == 1)
+            var (rotateable, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            if (CurrentTetri.PositionX < FieldSizeX - 4 || distance == 1)
                 CurrentTetri.PositionX++;
         }
         public void RotateRight()
         {
-            int rotationValue = RightRotationCollision();
-            if (rotationValue < 0)
+            var (rotateable, distance) = RightRotationCollision();
+
+            if (!rotateable) return;
+
+            if (distance < 0)
             {
-                rotationValue = Math.Abs(rotationValue);
-                if (CurrentTetri.PositionX > FieldSizeX / 2) CurrentTetri.PositionX -= rotationValue;
-                if (CurrentTetri.PositionX < FieldSizeX / 2) CurrentTetri.PositionX += rotationValue;
+                distance = Math.Abs(distance);
+                if (CurrentTetri.PositionX > FieldSizeX / 2) CurrentTetri.PositionX -= distance;
+                if (CurrentTetri.PositionX < FieldSizeX / 2) CurrentTetri.PositionX += distance;
             }
             CurrentTetri.RotateRight();
         }
         public void RotateLeft()
         {
-            int rotationValue = LeftRotationCollision();
-            if (rotationValue < 0)
+            var (rotateable, distance) = LeftRotationCollision();
+
+            if (!rotateable) return;
+
+            if (distance < 0)
             {
-                rotationValue = Math.Abs(rotationValue);
-                if (CurrentTetri.PositionX > FieldSizeX / 2) CurrentTetri.PositionX -= rotationValue;
-                if (CurrentTetri.PositionX < FieldSizeX / 2) CurrentTetri.PositionX += rotationValue;
+                distance = Math.Abs(distance);
+                if (CurrentTetri.PositionX > FieldSizeX / 2) CurrentTetri.PositionX -= distance;
+                if (CurrentTetri.PositionX < FieldSizeX / 2) CurrentTetri.PositionX += distance;
             }
             CurrentTetri.RotateLeft();
         }

@@ -13,7 +13,7 @@ namespace TetrisModel
     {
         I, O, L, J, S, Z
     }
-    public partial class TetrominoModel
+    public partial class Tetromino
     {
 
         private readonly Coord[] I = {

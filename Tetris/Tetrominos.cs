@@ -5,24 +5,31 @@ using System.Diagnostics;
 
 namespace TetrisModel
 {
-    public partial class TetrominoModel
+    public partial class Tetromino
     {
-        public bool[,] Position { get; private set; } = new bool[4, 4];
+        public bool[,] TetroMatrix { get; private set; } = new bool[4, 4];
         public Tetri TetriType;
-        public TetrominoModel() {}
-        public TetrominoModel(Tetri tetri)
+
+        public int PositionX;
+        public int PositionY;
+
+        public Tetromino() {}
+        public Tetromino(int beginX, int beginY)
         {
-            CreateStandardTetri(tetri);
+            PositionX = beginX;
+            PositionY = beginY;
         }
 
-        public TetrominoModel GetCopy()
+        public Tetromino GetCopy()
         {
-            TetrominoModel newTetri = new TetrominoModel();
+            Tetromino newTetri = new Tetromino();
             newTetri.TetriType = this.TetriType;
+            newTetri.PositionX = this.PositionX;
+            newTetri.PositionY = this.PositionY;
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++)
                 {
-                    newTetri.Position[i, j] = this.Position[i, j];
+                    newTetri.TetroMatrix[i, j] = this.TetroMatrix[i, j];
                 }
             return newTetri;
         }
@@ -49,10 +56,10 @@ namespace TetrisModel
             {
                 for (int x = 0; x < 4; x++)
                 {
-                    rotated[x, y] = Position[3 - y, x];
+                    rotated[x, y] = TetroMatrix[3 - y, x];
                 }
             }
-            Position = rotated;
+            TetroMatrix = rotated;
         }
 
         public void RotateRight()
@@ -62,10 +69,10 @@ namespace TetrisModel
             {
                 for (int x = 0; x < 4; x++)
                 {
-                    rotated[x, y] = Position[y, 3 - x];
+                    rotated[x, y] = TetroMatrix[y, 3 - x];
                 }
             }
-            Position = rotated;
+            TetroMatrix = rotated;
         }
 
         public Coord[] ConvertTetri()
@@ -75,7 +82,7 @@ namespace TetrisModel
             for (int y = 0; y < 4; y++)
                 for (int x = 0; x < 4; x++)
                 {
-                    if (Position[x, y] == true)
+                    if (TetroMatrix[x, y] == true)
                     {
                         tetri[count].X = x;
                         tetri[count].Y = y;
@@ -120,14 +127,14 @@ namespace TetrisModel
         {
             for (int i = 0; i < 4; i++)
             {
-                Position[tetri[i].X, tetri[i].Y] = true;
+                TetroMatrix[tetri[i].X, tetri[i].Y] = true;
             }
         }
 
         private void CreateRandomTetro()
         {
             Random rnd = new Random();
-            Position[2, 2] = true;
+            TetroMatrix[2, 2] = true;
             for (int i = 0; i < 3; i++)
             {
                 int column;
@@ -137,16 +144,16 @@ namespace TetrisModel
                     column = rnd.Next(4);
                     row = rnd.Next(4);
                 } 
-                while (Position[column, row] == true || !HasNeighbor(column, row));
-                Position[column, row] = true;
+                while (TetroMatrix[column, row] == true || !HasNeighbor(column, row));
+                TetroMatrix[column, row] = true;
             }
         }
         private bool HasNeighbor(int x, int y)
         {
-            if (x > 0 && Position[x - 1, y]) return true;
-            if (x < 3 && Position[x + 1, y]) return true;
-            if (y > 0 && Position[x, y - 1]) return true;
-            if (y < 3 && Position[x, y + 1]) return true;
+            if (x > 0 && TetroMatrix[x - 1, y]) return true;
+            if (x < 3 && TetroMatrix[x + 1, y]) return true;
+            if (y > 0 && TetroMatrix[x, y - 1]) return true;
+            if (y < 3 && TetroMatrix[x, y + 1]) return true;
 
             return false;
         }
@@ -159,7 +166,7 @@ namespace TetrisModel
             for (int x = 0; x < 4; x++)
                 for (int y = 0; y < 4; y++)
                 {
-                    if (Position[x, y])
+                    if (TetroMatrix[x, y])
                     {
                         if (x < minX)
                             minX = x;

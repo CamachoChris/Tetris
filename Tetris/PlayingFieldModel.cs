@@ -5,35 +5,23 @@ using System.Diagnostics;
 
 namespace TetrisModel
 {
-    public class FieldTetri : TetrominoModel
-    {
-        public int PositionX;
-        public int PositionY;
-
-        public FieldTetri() { }
-        public FieldTetri(int beginX, int beginY)
-        {
-            PositionX = beginX;
-            PositionY = beginY;
-        }
-    }
 
     public class PlayingFieldModel
     {
         public int FieldSizeX { get; private set; }
         public int FieldSizeY { get; private set; }
 
-        private FieldTetri CurrentTetri;
-        private FieldTetri NextTetri;
+        private Tetromino CurrentTetri;
+        private Tetromino NextTetri;
 
-        private List<FieldTetri> landedTetri = new List<FieldTetri>();
+        private List<Tetromino> landedTetri = new List<Tetromino>();
 
         public PlayingFieldModel(int fieldSizeX, int fieldSizeY)
         {
             FieldSizeX = fieldSizeX;
             FieldSizeY = fieldSizeY;
-            CurrentTetri = new FieldTetri(FieldSizeX / 2 - 2, -4);
-            NextTetri = new FieldTetri(FieldSizeX / 2 - 2, -4);
+            CurrentTetri = new Tetromino(FieldSizeX / 2 - 2, -4);
+            NextTetri = new Tetromino(FieldSizeX / 2 - 2, -4);
             CurrentTetri.BeStandardTetri(Tetri.I); //BeRandomTetri();
             NextTetri.BeRandomTetri();
         }
@@ -48,7 +36,7 @@ namespace TetrisModel
             return LocateTetri(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
-        private static Coord[] LocateTetri(TetrominoModel tetri, int fieldX, int fieldY)
+        private static Coord[] LocateTetri(Tetromino tetri, int fieldX, int fieldY)
         {
             Coord[] someTetri = tetri.ConvertTetri();
             for (int i = 0; i < 4; i++)
@@ -66,7 +54,7 @@ namespace TetrisModel
         /// <param name="positionX"></param>
         /// <param name="positionY"></param>
         /// <returns>negative value = how deep through the border. 0 = directly at the border, still inside. 1 = rest of field.</returns>
-        private (bool rotateable, int distance) CollisionDetection(TetrominoModel tetri, int positionX, int positionY)
+        private (bool rotateable, int distance) CollisionDetection(Tetromino tetri, int positionX, int positionY)
         {
             bool rotateable = true;
             int distance = 1;
@@ -82,7 +70,7 @@ namespace TetrisModel
             return (rotateable, distance);
         }
 
-        private bool BottomCollision(TetrominoModel tetri, int fieldX, int fieldY)
+        private bool BottomCollision(Tetromino tetri, int fieldX, int fieldY)
         {
             Coord[] current = LocateTetri(tetri, fieldX, fieldY);
             for (int i = 0; i < 4; i++)
@@ -92,13 +80,13 @@ namespace TetrisModel
         }
         private (bool rotateable, int distance) LeftRotationCollision()
         {
-            TetrominoModel tmp = CurrentTetri.GetCopy();
+            Tetromino tmp = CurrentTetri.GetCopy();
             tmp.RotateLeft();
             return CollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
         private (bool rotateable, int distance) RightRotationCollision()
         {
-            TetrominoModel tmp = CurrentTetri.GetCopy();
+            Tetromino tmp = CurrentTetri.GetCopy();
             tmp.RotateRight();
             return CollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
@@ -111,7 +99,7 @@ namespace TetrisModel
             {
                 landedTetri.Add(CurrentTetri);
                 CurrentTetri = NextTetri;
-                FieldTetri tmp = new FieldTetri(FieldSizeX / 2 - 2, -4);
+                Tetromino tmp = new Tetromino(FieldSizeX / 2 - 2, -4);
                 tmp.BeRandomTetri();
                 NextTetri = tmp;
             }

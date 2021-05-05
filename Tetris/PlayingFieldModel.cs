@@ -10,7 +10,7 @@ namespace TetrisModel
         public int PositionX;
         public int PositionY;
 
-        public FieldTetri() {}
+        public FieldTetri() { }
         public FieldTetri(int beginX, int beginY)
         {
             PositionX = beginX;
@@ -23,7 +23,7 @@ namespace TetrisModel
         public int FieldSizeX { get; private set; }
         public int FieldSizeY { get; private set; }
 
-        private FieldTetri CurrentTetri; 
+        private FieldTetri CurrentTetri;
         private FieldTetri NextTetri;
 
         private List<FieldTetri> landedTetri = new List<FieldTetri>();
@@ -70,7 +70,6 @@ namespace TetrisModel
         {
             int distance = 1;
             var (minX, maxX, minY, maxY) = tetri.GetRange();
-            Debug.WriteLine($"{minX + positionX}, {maxX + positionX}, {minY + positionY}, {maxY + positionY}");
             if (minX + positionX <= 0)
                 distance = minX + positionX;
             else if (maxX + positionX >= FieldSizeX - 1)
@@ -101,8 +100,6 @@ namespace TetrisModel
 
         public void MoveDown()
         {
-            int distance = SideCollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
-            Debug.WriteLine($"x: {CurrentTetri.PositionX}, distance: {distance}");
             if (!BottomCollision(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1))
                 CurrentTetri.PositionY++;
             else
@@ -133,7 +130,7 @@ namespace TetrisModel
                 if (CurrentTetri.PositionX > FieldSizeX / 2) CurrentTetri.PositionX -= rotationValue;
                 if (CurrentTetri.PositionX < FieldSizeX / 2) CurrentTetri.PositionX += rotationValue;
             }
-                CurrentTetri.RotateRight();
+            CurrentTetri.RotateRight();
         }
         public void RotateLeft()
         {

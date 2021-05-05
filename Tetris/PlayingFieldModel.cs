@@ -5,13 +5,13 @@ using System.Diagnostics;
 
 namespace TetrisModel
 {
-    public class TetriView : TetrominoModel
+    public class FieldTetri : TetrominoModel
     {
         public int PositionX;
         public int PositionY;
 
-        public TetriView() {}
-        public TetriView(int beginX, int beginY)
+        public FieldTetri() {}
+        public FieldTetri(int beginX, int beginY)
         {
             PositionX = beginX;
             PositionY = beginY;
@@ -23,15 +23,17 @@ namespace TetrisModel
         public int FieldSizeX { get; private set; }
         public int FieldSizeY { get; private set; }
 
-        private TetriView CurrentTetri; 
-        private TetriView NextTetri;
+        private FieldTetri CurrentTetri; 
+        private FieldTetri NextTetri;
+
+        private List<FieldTetri> landedTetri = new List<FieldTetri>();
 
         public PlayingFieldModel(int fieldSizeX, int fieldSizeY)
         {
             FieldSizeX = fieldSizeX;
             FieldSizeY = fieldSizeY;
-            CurrentTetri = new TetriView(FieldSizeX / 2 - 2, -4);
-            NextTetri = new TetriView(FieldSizeX / 2 - 2, -4);
+            CurrentTetri = new FieldTetri(FieldSizeX / 2 - 2, -4);
+            NextTetri = new FieldTetri(FieldSizeX / 2 - 2, -4);
             CurrentTetri.BeStandardTetri(Tetri.I); //BeRandomTetri();
             NextTetri.BeRandomTetri();
         }
@@ -116,8 +118,11 @@ namespace TetrisModel
                 CurrentTetri.PositionY++;
             else
             {
+                landedTetri.Add(CurrentTetri);
                 CurrentTetri = NextTetri;
-                NextTetri.BeRandomTetri();
+                FieldTetri tmp = new FieldTetri(FieldSizeX / 2 - 2, -4);
+                tmp.BeRandomTetri();
+                NextTetri = tmp;
             }
         }
         public void MoveLeft()

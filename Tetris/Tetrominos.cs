@@ -150,5 +150,28 @@ namespace TetrisModel
 
             return false;
         }
+        public (int minX, int maxX, int minY, int maxY) GetRange()
+        {
+            int minX = 2;
+            int maxX = 1;
+            int minY = 2;
+            int maxY = 1;
+            for (int x = 0; x < 4; x++)
+                for (int y = 0; y < 4; y++)
+                {
+                    if (Position[x, y])
+                    {
+                        if (x < minX)
+                            minX = x;
+                        if (x > maxX)
+                            maxX = x;
+                        if (y < minY)
+                            minY = y;
+                        if (y > maxY)
+                            maxY = y;
+                    }
+                }
+            return (minX, maxX, minY, maxY);
+        }
     }
 }

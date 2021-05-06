@@ -52,6 +52,23 @@ namespace TetrisModel
             return someTetri;
         }
         
+        private bool IsSquareFree(Tetromino tetri, int positionX, int positionY)
+        {
+            if (landedTetri.Count == 0)
+                return true;
+            Coord[] current = LocateTetri(tetri, positionX, positionY);
+            foreach (var entry in landedTetri)
+            {
+                for (int i = 0; i < current.Length; i++)
+                    for (int j = 0; j < entry.Tetri.Length; j++)
+                    {
+                        if (current[i].X == entry.Tetri[j].X && current[i].Y == entry.Tetri[j].Y)
+                            return false;
+                    }
+            }
+            return true;
+        }
+
         /// <summary>
         /// Returns the distance of the left and right border. For bottom collision only bool relevant.
         /// </summary>
@@ -77,6 +94,8 @@ namespace TetrisModel
 
         private bool BottomCollision(Tetromino tetri, int fieldX, int fieldY)
         {
+            if (!IsSquareFree(tetri, fieldX, fieldY))
+                return true;
             Coord[] current = LocateTetri(tetri, fieldX, fieldY);
             for (int i = 0; i < 4; i++)
                 if (current[i].Y > FieldSizeY - 1)

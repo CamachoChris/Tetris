@@ -55,22 +55,27 @@ namespace Tetris
         {
             switch (e.Key)
             {
-                case Key.S:
+                case Key.NumPad5:
+                case Key.S:                    
                     FieldModel.MoveDown();
                     FieldView.PaintCurrentTetri();
                     break;
+                case Key.NumPad4:
                 case Key.A:
                     FieldModel.MoveLeft();
                     FieldView.PaintCurrentTetri();
                     break;
+                case Key.NumPad6:
                 case Key.D:
                     FieldModel.MoveRight();
                     FieldView.PaintCurrentTetri();
                     break;
+                case Key.NumPad7:
                 case Key.Q:
                     FieldModel.RotateLeft();
                     FieldView.PaintCurrentTetri();
                     break;
+                case Key.NumPad9:
                 case Key.E:
                     FieldModel.RotateRight();
                     FieldView.PaintCurrentTetri();

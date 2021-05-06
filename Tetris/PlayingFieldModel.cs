@@ -14,7 +14,7 @@ namespace TetrisModel
         private Tetromino CurrentTetri;
         private Tetromino NextTetri;
 
-        private List<Tetromino> landedTetri = new List<Tetromino>();
+        private List<LandedTetromino> landedTetri = new List<LandedTetromino>();
 
         public PlayingFieldModel(int fieldSizeX, int fieldSizeY)
         {
@@ -22,7 +22,8 @@ namespace TetrisModel
             FieldSizeY = fieldSizeY;
             CurrentTetri = new Tetromino(FieldSizeX / 2 - 2, -4);
             NextTetri = new Tetromino(FieldSizeX / 2 - 2, -4);
-            CurrentTetri.BeStandardTetri(Tetri.I); //BeRandomTetri();
+            //CurrentTetri.BeStandardTetri(Tetri.I); 
+            CurrentTetri.BeRandomTetri();
             NextTetri.BeRandomTetri();
         }
 
@@ -97,7 +98,8 @@ namespace TetrisModel
                 CurrentTetri.PositionY++;
             else
             {
-                landedTetri.Add(CurrentTetri);
+                landedTetri.Add(new LandedTetromino(CurrentTetri));
+                landedTetri[landedTetri.Count-1].Show();
                 CurrentTetri = NextTetri;
                 Tetromino tmp = new Tetromino(FieldSizeX / 2 - 2, -4);
                 tmp.BeRandomTetri();

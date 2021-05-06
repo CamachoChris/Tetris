@@ -5,6 +5,43 @@ using System.Diagnostics;
 
 namespace TetrisModel
 {
+    class LandedTetromino
+    {
+        public Tetri TetriType;
+        public Coord[] Tetri;
+
+        public LandedTetromino() 
+        {
+            Tetri = new Coord[4];
+        }
+
+        public LandedTetromino(Tetromino matrixTetri)
+        {
+            Tetri = matrixTetri.ConvertTetri();
+            TetriType = matrixTetri.TetriType;
+        }
+
+        public void RemoveAt(int index)
+        {
+            Coord[] newCoord = new Coord[Tetri.Length - 1];
+            int newArrayCount = 0;
+            for (int i = 0; i < Tetri.Length; i++)
+            {
+                if (i != index)
+                    newCoord[newArrayCount++] = Tetri[i];
+            }
+            Tetri = newCoord;
+        }
+        public void Show()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Debug.Write($"x:{Tetri[i].X} y:{Tetri[i].Y}, ");
+            }
+            Debug.WriteLine(TetriType);
+        }
+    }
+
     public partial class Tetromino
     {
         public bool[,] TetroMatrix { get; private set; } = new bool[4, 4];

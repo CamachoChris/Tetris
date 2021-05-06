@@ -37,13 +37,13 @@ namespace TetrisModel
             return LocateTetri(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
-        private static Coord[] LocateTetri(Tetromino tetri, int fieldX, int fieldY)
+        private static Coord[] LocateTetri(Tetromino tetri, int positionX, int positionY)
         {
             Coord[] someTetri = tetri.ConvertTetri();
             for (int i = 0; i < 4; i++)
             {
-                someTetri[i].X = someTetri[i].X + fieldX;
-                someTetri[i].Y = someTetri[i].Y + fieldY;
+                someTetri[i].X = someTetri[i].X + positionX;
+                someTetri[i].Y = someTetri[i].Y + positionY;
             }
             return someTetri;
         }
@@ -99,7 +99,6 @@ namespace TetrisModel
             else
             {
                 landedTetri.Add(new LandedTetromino(CurrentTetri));
-                landedTetri[landedTetri.Count-1].Show();
                 CurrentTetri = NextTetri;
                 Tetromino tmp = new Tetromino(FieldSizeX / 2 - 2, -4);
                 tmp.BeRandomTetri();
@@ -108,13 +107,13 @@ namespace TetrisModel
         }
         public void MoveLeft()
         {
-            var (rotateable, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
             if (CurrentTetri.PositionX > 0 || distance == 1)
                 CurrentTetri.PositionX--;
         }
         public void MoveRight()
         {
-            var (rotateable, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
             if (CurrentTetri.PositionX < FieldSizeX - 4 || distance == 1)
                 CurrentTetri.PositionX++;
         }

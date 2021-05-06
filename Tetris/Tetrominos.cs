@@ -17,7 +17,7 @@ namespace TetrisModel
 
         public LandedTetromino(Tetromino matrixTetri)
         {
-            Tetri = matrixTetri.ConvertTetri();
+            Tetri = matrixTetri.ConvertTetriInField();
             TetriType = matrixTetri.TetriType;
         }
 
@@ -110,6 +110,17 @@ namespace TetrisModel
                 }
             }
             TetroMatrix = rotated;
+        }
+
+        public Coord[] ConvertTetriInField()
+        {
+            Coord[] convertedTetri = ConvertTetri();
+            for (int i = 0; i < 4; i++)
+            {
+                convertedTetri[i].X += PositionX;
+                convertedTetri[i].Y += PositionY;
+            }
+            return convertedTetri;
         }
 
         public Coord[] ConvertTetri()

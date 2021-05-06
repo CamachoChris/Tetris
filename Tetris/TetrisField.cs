@@ -13,7 +13,7 @@ namespace TetrisModel
         public Tetromino CurrentTetri;
         private Tetromino NextTetri;
 
-        //public event EventHandler TetriLanded;
+        public event EventHandler TetriLanded;
         public event EventHandler FieldChanged;
 
         public List<CoordTetromino> landedTetri = new List<CoordTetromino>();
@@ -102,6 +102,9 @@ namespace TetrisModel
                 CurrentTetri.PositionY++;
             else
             {
+                if (TetriLanded != null)
+                    TetriLanded(null, EventArgs.Empty);
+
                 landedTetri.Add(new CoordTetromino(CurrentTetri));
                 CurrentTetri = NextTetri;
                 Tetromino tmp = new Tetromino(FieldSizeX / 2 - 2, -4);
@@ -116,18 +119,22 @@ namespace TetrisModel
         {
             var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
             if (CurrentTetri.PositionX > 0 || distance == 1)
+            {
                 CurrentTetri.PositionX--;
-            if (FieldChanged != null)
-                FieldChanged(null, EventArgs.Empty);
+                if (FieldChanged != null)
+                    FieldChanged(null, EventArgs.Empty);
+            }
         }
 
         public void MoveRight()
         {
             var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
             if (CurrentTetri.PositionX < FieldSizeX - 4 || distance == 1)
+            {
                 CurrentTetri.PositionX++;
-            if (FieldChanged != null)
-                FieldChanged(null, EventArgs.Empty);
+                if (FieldChanged != null)
+                    FieldChanged(null, EventArgs.Empty);
+            }
         }
 
         public void RotateRight()

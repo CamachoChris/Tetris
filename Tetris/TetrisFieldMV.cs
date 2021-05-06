@@ -26,20 +26,33 @@ namespace Tetris
         
         private TetriMV currentTetri;
 
-        private List<TetriMV> SquaresInField = new List<TetriMV>();
+        private List<TetriMV> FieldTetri = new List<TetriMV>();
 
-        public TetrisFieldMV(Canvas canvas, TetrisField playingField, int squaresize)
+        public TetrisFieldMV(Canvas canvas, TetrisField field, int squaresize)
         {
             TetrisCanvas = canvas;
-            tetrisField = playingField;
-            playingField.FieldChanged += PlayingField_FieldChanged;
+            this.tetrisField = field;
             SquareSize = squaresize;
 
-            currentTetri = new TetriMV(TetrisCanvas, SquareSize);
-            currentTetri.CoordTetri = new CoordTetromino(tetrisField.CurrentTetri);
+            field.FieldChanged += TetrisEvent_FieldChanged;
+            field.TetriLanded += TetrisEvent_TetriLanded;
+
+            MakeNewCurrent();
         }
 
-        private void PlayingField_FieldChanged(object sender, EventArgs e)
+        private void MakeNewCurrent()
+        {
+            currentTetri = new TetriMV(TetrisCanvas, SquareSize);
+            currentTetri.CoordTetri = new CoordTetromino(this.tetrisField.CurrentTetri);
+        }
+
+        private void TetrisEvent_TetriLanded(object sender, EventArgs e)
+        {
+            FieldTetri.Add(currentTetri);
+            MakeNewCurrent();
+        }
+
+        private void TetrisEvent_FieldChanged(object sender, EventArgs e)
         {
             currentTetri.CoordTetri = new CoordTetromino(tetrisField.CurrentTetri);
             currentTetri.Paint();
@@ -74,8 +87,12 @@ namespace Tetris
             tetrisField.RotateRight();
         }
 
-        private void PaintSquaresInField()
+        private void PaintField()
         {
+            foreach(var entry in FieldTetri)
+            {
+                entry.Paint();
+            }
         }
 
         private int CountLandedSquaresModel(List<CoordTetromino> landedTetrominos)

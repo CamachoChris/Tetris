@@ -41,6 +41,8 @@ namespace Tetris
             }
         }
 
+        public TetriMV() { }
+        
         public TetriMV(Canvas canvas, int squareSize)
         {
             for (int i = 0; i < 4; i++)

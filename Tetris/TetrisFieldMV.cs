@@ -22,28 +22,45 @@ namespace Tetris
         private readonly int SquareSize;
 
         private readonly Canvas TetrisCanvas;
+        private readonly Canvas TeaserCanvas;
         private TetrisField tetrisField;
         
         private TetriMV currentTetri;
+        private TetriMV nextTetri;
 
         private List<TetriMV> FieldTetri = new List<TetriMV>();
 
-        public TetrisFieldMV(Canvas canvas, TetrisField field, int squaresize)
+        public TetrisFieldMV(Canvas canvas, Canvas teasercanvas, TetrisField field, int squaresize)
         {
             TetrisCanvas = canvas;
-            this.tetrisField = field;
+            TeaserCanvas = teasercanvas;
+            tetrisField = field;
             SquareSize = squaresize;
 
             field.FieldChanged += TetrisEvent_FieldChanged;
             field.TetriLanded += TetrisEvent_TetriLanded;
+            field.ShowNextTetri += Field_ShowNextTetri;
 
             MakeNewCurrent();
+        }
+
+        private void Field_ShowNextTetri(object sender, EventArgs e)
+        {
+            MakeNewNext();
         }
 
         private void MakeNewCurrent()
         {
             currentTetri = new TetriMV(TetrisCanvas, SquareSize);
             currentTetri.CoordTetri = new CoordTetromino(this.tetrisField.CurrentTetri);
+        }
+
+        private void MakeNewNext()
+        {
+            TeaserCanvas.Children.Clear();
+            nextTetri = new TetriMV(TeaserCanvas, SquareSize);
+            nextTetri.CoordTetri = new CoordTetromino(tetrisField.NextTetri);
+            nextTetri.Paint();
         }
 
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)
@@ -60,6 +77,7 @@ namespace Tetris
 
         public void Start()
         {
+            MakeNewNext();
         }
 
         public void MoveLeft()

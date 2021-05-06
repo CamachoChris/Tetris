@@ -11,10 +11,11 @@ namespace TetrisModel
         public int FieldSizeY { get; private set; }
 
         public Tetromino CurrentTetri;
-        private Tetromino NextTetri;
+        public Tetromino NextTetri;
 
         public event EventHandler TetriLanded;
         public event EventHandler FieldChanged;
+        public event EventHandler ShowNextTetri;
 
         public List<CoordTetromino> landedTetri = new List<CoordTetromino>();
 
@@ -23,7 +24,8 @@ namespace TetrisModel
             FieldSizeX = fieldSizeX;
             FieldSizeY = fieldSizeY;
             CurrentTetri = new Tetromino(FieldSizeX / 2 - 2, -4);
-            NextTetri = new Tetromino(FieldSizeX / 2 - 2, -4);
+            //NextTetri = new Tetromino(FieldSizeX / 2 - 2, -4);
+            NextTetri = new Tetromino(0, 0);
             //CurrentTetri.BeStandardTetri(Tetri.I); 
             CurrentTetri.BeRandomTetri();
             NextTetri.BeRandomTetri();
@@ -49,7 +51,7 @@ namespace TetrisModel
             }
             return someTetri;
         }
-
+        
         /// <summary>
         /// Returns the distance of the left and right border. For bottom collision only bool relevant.
         /// </summary>
@@ -57,9 +59,9 @@ namespace TetrisModel
         /// <param name="positionX"></param>
         /// <param name="positionY"></param>
         /// <returns>negative value = how deep through the border. 0 = directly at the border, still inside. 1 = rest of field.</returns>
-        private (bool rotateable, int distance) CollisionDetection(Tetromino tetri, int positionX, int positionY)
+        private (bool freeway, int distance) CollisionDetection(Tetromino tetri, int positionX, int positionY)
         {
-            bool rotateable = true;
+            bool freeway = true;
             int distance = 1;
             var (minX, maxX, minY, maxY) = tetri.GetRange();
             if (minX + positionX <= 0)
@@ -68,9 +70,9 @@ namespace TetrisModel
                 distance = FieldSizeX - 1 - (maxX + positionX);
 
             if (maxY + positionY >= FieldSizeY)
-                rotateable = false;
+                freeway = false;
 
-            return (rotateable, distance);
+            return (freeway, distance);
         }
 
         private bool BottomCollision(Tetromino tetri, int fieldX, int fieldY)
@@ -82,14 +84,14 @@ namespace TetrisModel
             return false;
         }
 
-        private (bool rotateable, int distance) LeftRotationCollision()
+        private (bool freeway, int distance) LeftRotationCollision()
         {
             Tetromino tmp = CurrentTetri.GetCopy();
             tmp.RotateLeft();
             return CollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
-        private (bool rotateable, int distance) RightRotationCollision()
+        private (bool freeway, int distance) RightRotationCollision()
         {
             Tetromino tmp = CurrentTetri.GetCopy();
             tmp.RotateRight();
@@ -106,10 +108,14 @@ namespace TetrisModel
                     TetriLanded(null, EventArgs.Empty);
 
                 landedTetri.Add(new CoordTetromino(CurrentTetri));
+                NextTetri.PositionX = FieldSizeX / 2 - 2;
+                NextTetri.PositionY = -4;
                 CurrentTetri = NextTetri;
-                Tetromino tmp = new Tetromino(FieldSizeX / 2 - 2, -4);
+                Tetromino tmp = new Tetromino(0, 0);
                 tmp.BeRandomTetri();
                 NextTetri = tmp;
+                if (ShowNextTetri != null)
+                    ShowNextTetri(null, EventArgs.Empty);
             }
             if (FieldChanged != null)
                 FieldChanged(null, EventArgs.Empty);
@@ -139,9 +145,9 @@ namespace TetrisModel
 
         public void RotateRight()
         {
-            var (rotateable, distance) = RightRotationCollision();
+            var (freeway, distance) = RightRotationCollision();
 
-            if (!rotateable) return;
+            if (!freeway) return;
 
             if (distance < 0)
             {
@@ -156,9 +162,9 @@ namespace TetrisModel
 
         public void RotateLeft()
         {
-            var (rotateable, distance) = LeftRotationCollision();
+            var (freeway, distance) = LeftRotationCollision();
 
-            if (!rotateable) return;
+            if (!freeway) return;
 
             if (distance < 0)
             {

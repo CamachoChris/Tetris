@@ -30,15 +30,15 @@ namespace Tetris
         const int FieldSizeX = 10; //horizontal
         const int FieldSizeY = 18; //vertical
 
-        PlayingFieldModel FieldModel;
-        PlayingFieldView FieldView;
+        TetrisField tetrisField;
+        TetrisFieldMV tetrisFieldMV;        
 
         public MainWindow()
         {
             InitializeComponent();
-            FieldModel = new PlayingFieldModel(FieldSizeX, FieldSizeY);
-            FieldView = new PlayingFieldView(PlayingCanvas, FieldModel, SquareSize);
-            FieldView.Start();
+            tetrisField = new TetrisField(FieldSizeX, FieldSizeY);
+            tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, tetrisField, SquareSize);
+            tetrisFieldMV.Start();
         }
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
@@ -57,28 +57,23 @@ namespace Tetris
             {
                 case Key.NumPad5:
                 case Key.S:                    
-                    FieldModel.MoveDown();
-                    FieldView.PaintCurrentTetri();
+                    tetrisFieldMV.MoveDown();
                     break;
                 case Key.NumPad4:
                 case Key.A:
-                    FieldModel.MoveLeft();
-                    FieldView.PaintCurrentTetri();
+                    tetrisFieldMV.MoveLeft();
                     break;
                 case Key.NumPad6:
                 case Key.D:
-                    FieldModel.MoveRight();
-                    FieldView.PaintCurrentTetri();
+                    tetrisFieldMV.MoveRight();
                     break;
                 case Key.NumPad7:
                 case Key.Q:
-                    FieldModel.RotateLeft();
-                    FieldView.PaintCurrentTetri();
+                    tetrisFieldMV.RotateLeft();
                     break;
                 case Key.NumPad9:
                 case Key.E:
-                    FieldModel.RotateRight();
-                    FieldView.PaintCurrentTetri();
+                    tetrisFieldMV.RotateRight();
                     break;
             }
         }

@@ -5,43 +5,6 @@ using System.Diagnostics;
 
 namespace TetrisModel
 {
-    class LandedTetromino
-    {
-        public Tetri TetriType;
-        public Coord[] Tetri;
-
-        public LandedTetromino() 
-        {
-            Tetri = new Coord[4];
-        }
-
-        public LandedTetromino(Tetromino matrixTetri)
-        {
-            Tetri = matrixTetri.ConvertTetriInField();
-            TetriType = matrixTetri.TetriType;
-        }
-
-        public void RemoveAt(int index)
-        {
-            Coord[] newCoord = new Coord[Tetri.Length - 1];
-            int newArrayCount = 0;
-            for (int i = 0; i < Tetri.Length; i++)
-            {
-                if (i != index)
-                    newCoord[newArrayCount++] = Tetri[i];
-            }
-            Tetri = newCoord;
-        }
-        public void Show()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                Debug.Write($"x:{Tetri[i].X} y:{Tetri[i].Y}, ");
-            }
-            Debug.WriteLine(TetriType);
-        }
-    }
-
     public partial class Tetromino
     {
         public bool[,] TetroMatrix { get; private set; } = new bool[4, 4];
@@ -81,6 +44,7 @@ namespace TetrisModel
             for (int i = 0; i < randRotate; i++)            
                 RotateRight();                       
         }
+
         public void BeStandardTetri(Tetri tetri)
         {
             CreateStandardTetri(tetri);
@@ -112,9 +76,9 @@ namespace TetrisModel
             TetroMatrix = rotated;
         }
 
-        public Coord[] ConvertTetriInField()
+        public Coord[] ConvertToFieldCoord()
         {
-            Coord[] convertedTetri = ConvertTetri();
+            Coord[] convertedTetri = ConvertToCoord();
             for (int i = 0; i < 4; i++)
             {
                 convertedTetri[i].X += PositionX;
@@ -123,7 +87,7 @@ namespace TetrisModel
             return convertedTetri;
         }
 
-        public Coord[] ConvertTetri()
+        public Coord[] ConvertToCoord()
         {
             Coord[] tetri = new Coord[4];
             int count = 0;
@@ -140,71 +104,46 @@ namespace TetrisModel
                 }
             return tetri;
         }
+
         private void CreateStandardTetri(Tetri tetri)
         {
             switch (tetri)
             {
                 case Tetri.I:
-                    CopyStandardTetri(I);
+                    SetFromCoordArray(I);
                     TetriType = Tetri.I;
                     break;
                 case Tetri.O:
-                    CopyStandardTetri(O);
+                    SetFromCoordArray(O);
                     TetriType = Tetri.O;
                     break;
                 case Tetri.L:
-                    CopyStandardTetri(L);
+                    SetFromCoordArray(L);
                     TetriType = Tetri.L;
                     break;
                 case Tetri.J:
-                    CopyStandardTetri(J);
+                    SetFromCoordArray(J);
                     TetriType = Tetri.J;
                     break;
                 case Tetri.S:
-                    CopyStandardTetri(S);
+                    SetFromCoordArray(S);
                     TetriType = Tetri.S;
                     break;
                 case Tetri.Z:
-                    CopyStandardTetri(Z);
+                    SetFromCoordArray(Z);
                     TetriType = Tetri.Z;
                     break;
             }
         }
 
-        private void CopyStandardTetri(Coord[] tetri)
+        private void SetFromCoordArray(Coord[] tetri)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < tetri.Length; i++)
             {
                 TetroMatrix[tetri[i].X, tetri[i].Y] = true;
             }
         }
 
-        private void CreateRandomTetro()
-        {
-            Random rnd = new Random();
-            TetroMatrix[2, 2] = true;
-            for (int i = 0; i < 3; i++)
-            {
-                int column;
-                int row;
-                do
-                {
-                    column = rnd.Next(4);
-                    row = rnd.Next(4);
-                } 
-                while (TetroMatrix[column, row] == true || !HasNeighbor(column, row));
-                TetroMatrix[column, row] = true;
-            }
-        }
-        private bool HasNeighbor(int x, int y)
-        {
-            if (x > 0 && TetroMatrix[x - 1, y]) return true;
-            if (x < 3 && TetroMatrix[x + 1, y]) return true;
-            if (y > 0 && TetroMatrix[x, y - 1]) return true;
-            if (y < 3 && TetroMatrix[x, y + 1]) return true;
-
-            return false;
-        }
         public (int minX, int maxX, int minY, int maxY) GetRange()
         {
             int minX = 2;
@@ -227,6 +166,34 @@ namespace TetrisModel
                     }
                 }
             return (minX, maxX, minY, maxY);
+        }
+
+        private void CreateRandomTetro()
+        {
+            Random rnd = new Random();
+            TetroMatrix[2, 2] = true;
+            for (int i = 0; i < 3; i++)
+            {
+                int column;
+                int row;
+                do
+                {
+                    column = rnd.Next(4);
+                    row = rnd.Next(4);
+                } 
+                while (TetroMatrix[column, row] == true || !HasNeighbor(column, row));
+                TetroMatrix[column, row] = true;
+            }
+        }
+
+        private bool HasNeighbor(int x, int y)
+        {
+            if (x > 0 && TetroMatrix[x - 1, y]) return true;
+            if (x < 3 && TetroMatrix[x + 1, y]) return true;
+            if (y > 0 && TetroMatrix[x, y - 1]) return true;
+            if (y < 3 && TetroMatrix[x, y + 1]) return true;
+
+            return false;
         }
     }
 }

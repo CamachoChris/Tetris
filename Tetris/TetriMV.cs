@@ -27,8 +27,9 @@ namespace Tetris
         readonly Brush ColorZ = Brushes.DarkOrchid;
         private readonly int _squareSize;
 
-        private readonly Rectangle[] _rectangleTetri = new Rectangle[4];
+        private readonly List<Rectangle> _rectangleTetri = new List<Rectangle>();
         private Brush _tetriColor;
+        private Canvas _canvas;
 
         private CoordListingTetri _coordTetri;
         public CoordListingTetri CoordTetri
@@ -37,26 +38,44 @@ namespace Tetris
             set
             {
                 _coordTetri = value;
+                _coordTetri.RemoveOne += _coordTetri_RemoveOne;
                 SetTetriColor();
             }
+        }
+
+        private void _coordTetri_RemoveOne(object sender, EventArgs e)
+        {
+            //_canvas.Children.Clear();
+            _rectangleTetri[_rectangleTetri.Count - 1].Visibility = Visibility.Hidden;
+            _rectangleTetri.RemoveAt(_rectangleTetri.Count - 1);
         }
 
         public TetriMV() { }
         
         public TetriMV(Canvas canvas, int squareSize)
         {
-            for (int i = 0; i < _rectangleTetri.Length; i++)
+            _canvas = canvas;
+
+            for (int i = 0; i < 4; i++)
             {
-                _rectangleTetri[i] = new Rectangle() { Height = squareSize, Width = squareSize, RadiusX = 5, RadiusY = 5 };
-                _rectangleTetri[i].Fill = Brushes.Transparent;
-                canvas.Children.Add(_rectangleTetri[i]);
+                _rectangleTetri.Add(new Rectangle()
+                {
+                    Height = squareSize,
+                    Width = squareSize,
+                    RadiusX = 5,
+                    RadiusY = 5,
+                    Fill = Brushes.Transparent
+                });
+
+
+                _canvas.Children.Add(_rectangleTetri[i]);
             }
             _squareSize = squareSize;
         }
 
         public void Paint()
         {
-            for (int i = 0; i < _rectangleTetri.Length; i++)
+            for (int i = 0; i < _rectangleTetri.Count; i++)
                 PaintSquare(_rectangleTetri[i], CoordTetri.Listing[i].X, CoordTetri.Listing[i].Y);
         }
 

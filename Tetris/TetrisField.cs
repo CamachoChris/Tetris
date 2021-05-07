@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace TetrisModel
 {
-    public class TetrisField
+    public partial class TetrisField
     {
         public int FieldSizeX { get; private set; }
         public int FieldSizeY { get; private set; }
@@ -24,8 +24,9 @@ namespace TetrisModel
             FieldSizeX = fieldSizeX;
             FieldSizeY = fieldSizeY;
 
-            CurrentTetri = new MatrixTetri(FieldSizeX / 2 - 2, -4);
+            CurrentTetri = new MatrixTetri();
             CurrentTetri.BeRandomStandardTetri();
+            SetStartPosition(CurrentTetri);
 
             NextTetri = new MatrixTetri(0, 0);
             NextTetri.BeRandomStandardTetri();
@@ -35,71 +36,94 @@ namespace TetrisModel
         {
             return CurrentTetri.StandardType;
         }
-        
-        /// <summary>
-        /// Tries to find a place by moving the Tetri horizontally from -2 to +2.
-        /// </summary>
-        /// <param name="matrixTetri"></param>
-        /// <param name="positionX"></param>
-        /// <param name="positionY"></param>
-        /// <returns>collision: true, when collision everywhere. false, when no collision when moving by moveValue</returns>
-        private (bool collision, int moveValue) HorizontalPlaceFinder(MatrixTetri matrixTetri, int positionX, int positionY)
+
+        private void PrepareForNextTetri()
         {
-            int moveValue = 0;
-            bool borderCollision;
-            bool squareCollision;
-            int[] moveOrder = new int[] { 0, 1, -1, 2, -2};
-            for (int i = 0; i < moveOrder.Length; i++)
-            {
-                moveValue = moveOrder[i];
-
-                borderCollision = CollisionWithBorder(matrixTetri, positionX + moveValue, positionY);
-                squareCollision = CollisionWithSquare(matrixTetri, positionX + moveValue, positionY);
-
-                if (!borderCollision && !squareCollision)
-                    return (false, moveValue);
-            }
-            return (true, moveValue);
+            SetStartPosition(NextTetri);
+            CurrentTetri = NextTetri;
+            MatrixTetri tmp = new MatrixTetri(0, 0);
+            tmp.BeRandomStandardTetri();
+            NextTetri = tmp;
         }
 
-        private bool CollisionWithSquare(MatrixTetri matrixTetri, int positionX, int positionY)
+        private void SetStartPosition(MatrixTetri matrixTetri)
         {
-            if (LandedTetri.Count == 0)
-                return false;
+            var (_, _, _, maxY) = matrixTetri.GetRange();
+            matrixTetri.PositionX = FieldSizeX / 2 - 2;
+            matrixTetri.PositionY = -1 - maxY;
+        }
 
-            CoordListingTetri current = new CoordListingTetri(matrixTetri, positionX, positionY);
-            foreach (var entry in LandedTetri)
+        private bool[,] ReturnFilledField()
+        {
+            bool[,] filledField = new bool[FieldSizeX, FieldSizeY];
+            foreach(var entry in LandedTetri)
             {
-                for (int i = 0; i < current.Listing.Length; i++)
-                    for (int j = 0; j < entry.Listing.Length; j++)
-                        if (current.Listing[i].X == entry.Listing[j].X && current.Listing[i].Y == entry.Listing[j].Y)
-                            return true;
+                for (int i = 0; i < entry.Listing.Length; i++)
+                {
+                    filledField[entry.Listing[i].X, entry.Listing[i].Y] = true;
+                }
+            }
+            return filledField;
+        }
+
+        private void FindFinishedLines()
+        {
+            bool[,] filledField = ReturnFilledField();
+
+            for (int y = 0; y < FieldSizeY; y++)
+            {
+                for (int x = 0; x < FieldSizeX; x++)
+                {
+                    if (filledField[x, y] == false)
+                    {
+                        break;
+                    }
+                    if (x == FieldSizeX - 1)
+                    {
+                        RemovedFinishedLine(y);
+                        LetThemFall();
+                    }
+                }
+
+            }
+        }
+
+        private void RemovedFinishedLine(int lineNumber)
+        {
+            foreach(var entry in LandedTetri)
+            {
+                int i = 0;
+                while (i < entry.Listing.Length)
+                {
+                    if (entry.Listing[i].Y == lineNumber)
+                    {
+                        entry.RemoveAt(i);
+                        i--;
+                    }
+                    i++;
+                };
+            }
+        }
+
+        private void LetThemFall()
+        {
+            foreach(var entry in LandedTetri)
+            {
+                entry.Fall();
+            }
+        }
+
+        private bool FallingDown(CoordListingTetri landedTetri)
+        {
+            bool borderCollision = CollisionWithBorder(landedTetri);
+            bool squareCollision = CollisionWithSquare(landedTetri);
+
+            if (!borderCollision && !squareCollision)
+            {
+                CurrentTetri.PositionY++;
+                return true;
             }
             return false;
-        }
-
-        private bool CollisionWithBorder(MatrixTetri matrixTetri, int positionX, int positionY)
-        {
-            CoordListingTetri current = new CoordListingTetri(matrixTetri, positionX, positionY);
-            bool collision = false;
-            var(minX, maxX, _, maxY) = current.GetRange();
-            if ((minX < 0) || (maxX >= FieldSizeX) || (maxY >= FieldSizeY))
-                collision = true;
-            return collision;
-        }
-
-        private (bool collision, int moveValue) RightRotationCollision(MatrixTetri matrixTetri)
-        {
-            MatrixTetri rotatedTetri = matrixTetri.GetCopy();
-            rotatedTetri.RotateRight();
-            return HorizontalPlaceFinder(rotatedTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
-        }
-
-        private (bool collision, int moveValue) LeftRotationCollision(MatrixTetri matrixTetri)
-        {
-            MatrixTetri rotatedTetri = matrixTetri.GetCopy();
-            rotatedTetri.RotateLeft();
-            return HorizontalPlaceFinder(rotatedTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
         public void MoveDown()
@@ -111,16 +135,13 @@ namespace TetrisModel
                 CurrentTetri.PositionY++;
             else
             {
+                LandedTetri.Add(new CoordListingTetri(CurrentTetri));
+
                 if (TetriLanded != null)
                     TetriLanded(null, EventArgs.Empty);
 
-                LandedTetri.Add(new CoordListingTetri(CurrentTetri));
-                NextTetri.PositionX = FieldSizeX / 2 - 2;
-                NextTetri.PositionY = -4;
-                CurrentTetri = NextTetri;
-                MatrixTetri tmp = new MatrixTetri(0, 0);
-                tmp.BeRandomStandardTetri();
-                NextTetri = tmp;
+                PrepareForNextTetri();
+                FindFinishedLines();
 
                 if (ShowNextTetri != null)
                     ShowNextTetri(null, EventArgs.Empty);

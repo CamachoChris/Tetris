@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TetrisModel;
+using System.Diagnostics;
 
 namespace Tetris
 {
@@ -51,7 +52,7 @@ namespace Tetris
         {
             currentTetri = new TetriMV(TetrisCanvas, SquareSize)
             {
-                CoordTetri = new CoordListingTetri(this.tetrisField.CurrentTetri)
+                CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri)
             };
         }
 
@@ -69,6 +70,7 @@ namespace Tetris
 
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)
         {
+            currentTetri.CoordTetri = tetrisField.LandedTetri[tetrisField.LandedTetri.Count - 1];
             FieldTetri.Add(currentTetri);
             MakeNewCurrent();
         }

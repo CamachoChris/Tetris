@@ -41,9 +41,9 @@ namespace TetrisModel
             return LocateTetri(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
-        private static Coord[] LocateTetri(Tetromino tetri, int positionX, int positionY)
+        private static Coord[] LocateTetri(Tetromino matrixTetri, int positionX, int positionY)
         {
-            Coord[] someTetri = tetri.ConvertToCoord();
+            Coord[] someTetri = matrixTetri.ConvertToCoord();
             for (int i = 0; i < 4; i++)
             {
                 someTetri[i].X = someTetri[i].X + positionX;
@@ -52,46 +52,29 @@ namespace TetrisModel
             return someTetri;
         }
         
-        private bool IsSquareFree(Tetromino tetri, int positionX, int positionY)
-        {
-            if (landedTetri.Count == 0)
-                return true;
-            Coord[] current = LocateTetri(tetri, positionX, positionY);
-            foreach (var entry in landedTetri)
-            {
-                for (int i = 0; i < current.Length; i++)
-                    for (int j = 0; j < entry.Tetri.Length; j++)
-                    {
-                        if (current[i].X == entry.Tetri[j].X && current[i].Y == entry.Tetri[j].Y)
-                            return false;
-                    }
-            }
-            return true;
-        }
-
         /// <summary>
-        /// Returns the distance of the left and right border. For bottom collision only bool relevant.
+        /// Tries to find a place by moving the Tetri horizontally from -2 to +2.
         /// </summary>
-        /// <param name="tetri"></param>
+        /// <param name="matrixTetri"></param>
         /// <param name="positionX"></param>
         /// <param name="positionY"></param>
-        /// <returns>negative value = how deep through the border. 0 = directly at the border, still inside. 1 = rest of field.</returns>
-        private (bool freeway, int distance) CollisionDetection(Tetromino tetri, int positionX, int positionY)
+        /// <returns>collision: true, when collision everywhere. false, when no collision when moving by moveValue</returns>
+        private (bool collision, int moveValue) HorizontalPlaceFinder(Tetromino matrixTetri, int positionX, int positionY)
         {
-            bool freeway = true;
-            int distance = 1;
-            var (minX, maxX, minY, maxY) = tetri.GetRange();
-            if (minX + positionX <= 0)
-                distance = minX + positionX;
-            else if (maxX + positionX >= FieldSizeX - 1)
-                distance = FieldSizeX - 1 - (maxX + positionX);
-
-            freeway = IsSquareFree(tetri, positionX, positionY);
-
-            if (maxY + positionY >= FieldSizeY)
-                freeway = false;
-
-            return (freeway, distance);
+            int moveValue = 0;
+            bool borderCollision;
+            bool squareCollision;
+            int[] moveOrder = new int[] { 0, 1, -1, 2, -2, 3, -3 };
+            for (int i = 0; i < moveOrder.Length; i++)
+            {
+                moveValue = moveOrder[i];
+                CoordTetromino current = new CoordTetromino(matrixTetri, positionX, positionY);
+                borderCollision = CollisionWithBorder(matrixTetri, positionX + moveValue, positionY);
+                squareCollision = CollisionWithSquare(matrixTetri, positionX + moveValue, positionY);
+                if (!borderCollision && !squareCollision)
+                    return (false, moveValue);
+            }
+            return (true, moveValue);
         }
 
         private bool CollisionWithSquare(Tetromino matrixTetri, int positionX, int positionY)
@@ -122,18 +105,19 @@ namespace TetrisModel
             return collision;
         }
 
-        private (bool freeway, int distance) LeftRotationCollision()
+        private (bool collision, int moveValue) RightRotationCollision(Tetromino matrixTetri, int positionX, int positionY)
         {
-            Tetromino tmp = CurrentTetri.GetCopy();
-            tmp.RotateLeft();
-            return CollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            Tetromino rotatedTetri = matrixTetri.GetCopy();
+            rotatedTetri.RotateRight();
+            return HorizontalPlaceFinder(rotatedTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
-        private (bool freeway, int distance) RightRotationCollision()
+        private (bool collision, int moveValue) LeftRotationCollision(Tetromino matrixTetri, int positionX, int positionY)
+
         {
-            Tetromino tmp = CurrentTetri.GetCopy();
-            tmp.RotateRight();
-            return CollisionDetection(tmp, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            Tetromino rotatedTetri = matrixTetri.GetCopy();
+            rotatedTetri.RotateLeft();
+            return HorizontalPlaceFinder(rotatedTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
         public void MoveDown()
@@ -188,60 +172,26 @@ namespace TetrisModel
 
         public void RotateRight()
         {
-            var (freeway, distance) = RightRotationCollision();
-
-            if (!freeway) return;
-
-            if (distance < 0)
+            var (collision, moveValue) = RightRotationCollision(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            if (!collision)
             {
-                distance = Math.Abs(distance);
-                if (CurrentTetri.PositionX > FieldSizeX / 2) 
-                {
-                    Tetromino tmp = CurrentTetri.GetCopy();
-                    tmp.RotateRight();
-                    if (IsSquareFree(tmp, CurrentTetri.PositionX - distance, CurrentTetri.PositionY))
-                        CurrentTetri.PositionX -= distance;
-                }
-                if (CurrentTetri.PositionX < FieldSizeX / 2)
-                {
-                    Tetromino tmp = CurrentTetri.GetCopy();
-                    tmp.RotateRight();
-                    if (IsSquareFree(tmp, CurrentTetri.PositionX + distance, CurrentTetri.PositionY))
-                        CurrentTetri.PositionX += distance;
-                }
+                CurrentTetri.PositionX += moveValue;
+                CurrentTetri.RotateRight();
+                if (FieldChanged != null)
+                    FieldChanged(null, EventArgs.Empty);
             }
-            CurrentTetri.RotateRight();
-            if (FieldChanged != null)
-                FieldChanged(null, EventArgs.Empty);
         }
 
         public void RotateLeft()
         {
-            var (freeway, distance) = LeftRotationCollision();
-
-            if (!freeway) return;
-
-            if (distance < 0)
+            var (collision, moveValue) = LeftRotationCollision(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            if (!collision)
             {
-                distance = Math.Abs(distance);
-                if (CurrentTetri.PositionX > FieldSizeX / 2)
-                {
-                    Tetromino tmp = CurrentTetri.GetCopy();
-                    tmp.RotateLeft();
-                    if (IsSquareFree(tmp, CurrentTetri.PositionX - distance, CurrentTetri.PositionY))
-                        CurrentTetri.PositionX -= distance;
-                }
-                if (CurrentTetri.PositionX < FieldSizeX / 2)
-                {
-                    Tetromino tmp = CurrentTetri.GetCopy();
-                    tmp.RotateLeft();
-                    if (IsSquareFree(tmp, CurrentTetri.PositionX + distance, CurrentTetri.PositionY))
-                        CurrentTetri.PositionX += distance;
-                }
+                CurrentTetri.PositionX += moveValue;
+                CurrentTetri.RotateLeft();
+                if (FieldChanged != null)
+                    FieldChanged(null, EventArgs.Empty);
             }
-            CurrentTetri.RotateLeft();
-            if (FieldChanged != null)
-                FieldChanged(null, EventArgs.Empty);
         }
     }
 }

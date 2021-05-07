@@ -94,25 +94,32 @@ namespace TetrisModel
             return (freeway, distance);
         }
 
+        private bool CollisionWithSquare(Tetromino matrixTetri, int positionX, int positionY)
+        {
+            if (landedTetri.Count == 0)
+                return false;
+
+            CoordTetromino current = new CoordTetromino(matrixTetri, positionX, positionY);
+            foreach (var entry in landedTetri)
+            {
+                for (int i = 0; i < current.Tetri.Length; i++)
+                    for (int j = 0; j < entry.Tetri.Length; j++)
+                    {
+                        if (current.Tetri[i].X == entry.Tetri[j].X && current.Tetri[i].Y == entry.Tetri[j].Y)
+                            return true;
+                    }
+            }
+            return false;
+        }
+
         private bool CollisionWithBorder(Tetromino matrixTetri, int positionX, int positionY)
         {
             bool collision = false;
-            Coord[] current = Tetromino.ConvertToFieldCoord(matrixTetri, positionX, positionY);
-            //var(minX, maxX, minY, maxY) current.
-            
-
-                return collision;
-        }
-
-        private bool BottomCollision(Tetromino tetri, int fieldX, int fieldY)
-        {
-            if (!IsSquareFree(tetri, fieldX, fieldY))
-                return true;
-            Coord[] current = LocateTetri(tetri, fieldX, fieldY);
-            for (int i = 0; i < 4; i++)
-                if (current[i].Y > FieldSizeY - 1)
-                    return true;
-            return false;
+            CoordTetromino current = new CoordTetromino(matrixTetri, positionX, positionY);
+            var(minX, maxX, _, maxY) = current.GetRange();
+            if ((minX < 0) || (maxX >= FieldSizeX) || (maxY >= FieldSizeY))
+                collision = true;
+            return collision;
         }
 
         private (bool freeway, int distance) LeftRotationCollision()
@@ -131,7 +138,9 @@ namespace TetrisModel
 
         public void MoveDown()
         {
-            if (!BottomCollision(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1))
+            bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
+            bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
+            if (!borderCollision && !squareCollision)
                 CurrentTetri.PositionY++;
             else
             {
@@ -145,6 +154,7 @@ namespace TetrisModel
                 Tetromino tmp = new Tetromino(0, 0);
                 tmp.BeRandomTetri();
                 NextTetri = tmp;
+
                 if (ShowNextTetri != null)
                     ShowNextTetri(null, EventArgs.Empty);
             }
@@ -154,10 +164,9 @@ namespace TetrisModel
 
         public void MoveLeft()
         {
-            if (!IsSquareFree(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY))
-                return;
-            var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
-            if (CurrentTetri.PositionX > 0 || distance == 1)
+            bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY);
+            bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY);
+            if ((CurrentTetri.PositionX > 0 || !borderCollision) && !squareCollision)
             {
                 CurrentTetri.PositionX--;
                 if (FieldChanged != null)
@@ -167,10 +176,9 @@ namespace TetrisModel
 
         public void MoveRight()
         {
-            if (!IsSquareFree(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY))
-                return;
-            var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
-            if (CurrentTetri.PositionX < FieldSizeX - 4 || distance == 1)
+            bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY);
+            bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY);
+            if ((CurrentTetri.PositionX < FieldSizeX - 4 || !borderCollision) && !squareCollision)
             {
                 CurrentTetri.PositionX++;
                 if (FieldChanged != null)

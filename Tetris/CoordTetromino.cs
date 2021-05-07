@@ -49,12 +49,12 @@ namespace TetrisModel
             int maxX = Tetri[0].X;
             int minY = Tetri[0].Y;
             int maxY = Tetri[0].Y;
-            for (int j = 1; j < Tetri.Length; j++)
+            for (int i = 1; i < Tetri.Length; i++)
             {
-                if (Tetri[j].X < minX) minX = Tetri[j].X;
-                if (Tetri[j].X > maxX) maxX = Tetri[j].X;
-                if (Tetri[j].Y < minY) minX = Tetri[j].Y;
-                if (Tetri[j].Y > minY) maxX = Tetri[j].Y;
+                if (Tetri[i].X < minX) minX = Tetri[i].X;
+                if (Tetri[i].X > maxX) maxX = Tetri[i].X;
+                if (Tetri[i].Y < minY) minY = Tetri[i].Y;
+                if (Tetri[i].Y > maxY) maxY = Tetri[i].Y;
             }
             return (minX, maxX, minY, maxY);
         }

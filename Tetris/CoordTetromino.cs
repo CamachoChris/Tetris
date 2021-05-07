@@ -17,12 +17,17 @@ namespace TetrisModel
 
         public CoordTetromino(Tetromino matrixTetri)
         {
-            SetTetri(matrixTetri);
+            SetTetri(matrixTetri, matrixTetri.PositionX, matrixTetri.PositionY);
         }
 
-        public void SetTetri(Tetromino matrixTetri)
+        public CoordTetromino(Tetromino matrixTetri, int positionX, int positionY)
         {
-            Tetri = matrixTetri.ConvertToFieldCoord();
+            SetTetri(matrixTetri, positionX, positionY);
+        }
+
+        public void SetTetri(Tetromino matrixTetri, int positionX, int positionY)
+        {
+            Tetri = Tetromino.ConvertToFieldCoord(matrixTetri, positionX, positionY);
             TetriType = matrixTetri.TetriType;
         }
 
@@ -36,6 +41,22 @@ namespace TetrisModel
                     newCoord[newArrayCount++] = Tetri[i];
             }
             Tetri = newCoord;
+        }
+
+        public (int minX, int maxX, int minY, int maxY) GetRange()
+        {
+            int minX = Tetri[0].X;
+            int maxX = Tetri[0].X;
+            int minY = Tetri[0].Y;
+            int maxY = Tetri[0].Y;
+            for (int j = 1; j < Tetri.Length; j++)
+            {
+                if (Tetri[j].X < minX) minX = Tetri[j].X;
+                if (Tetri[j].X > maxX) maxX = Tetri[j].X;
+                if (Tetri[j].Y < minY) minX = Tetri[j].Y;
+                if (Tetri[j].Y > minY) maxX = Tetri[j].Y;
+            }
+            return (minX, maxX, minY, maxY);
         }
 
         public void Show()

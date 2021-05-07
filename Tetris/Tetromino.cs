@@ -78,23 +78,28 @@ namespace TetrisModel
 
         public Coord[] ConvertToFieldCoord()
         {
-            Coord[] convertedTetri = ConvertToCoord();
+            return ConvertToFieldCoord(this, this.PositionX, this.PositionY);
+        }
+
+        public static Coord[] ConvertToFieldCoord(Tetromino matrixTetri, int positionX, int positionY)
+        {
+            Coord[] convertedTetri = ConvertToCoord(matrixTetri, positionX, positionY);
             for (int i = 0; i < 4; i++)
             {
-                convertedTetri[i].X += PositionX;
-                convertedTetri[i].Y += PositionY;
+                convertedTetri[i].X += positionX;
+                convertedTetri[i].Y += positionY;
             }
             return convertedTetri;
         }
 
-        public Coord[] ConvertToCoord()
+        public static Coord[] ConvertToCoord(Tetromino matrixTetri, int positionX, int positionY)
         {
             Coord[] tetri = new Coord[4];
             int count = 0;
             for (int y = 0; y < 4; y++)
                 for (int x = 0; x < 4; x++)
                 {
-                    if (TetroMatrix[x, y] == true)
+                    if (matrixTetri.TetroMatrix[x, y] == true)
                     {
                         tetri[count].X = x;
                         tetri[count].Y = y;
@@ -103,6 +108,11 @@ namespace TetrisModel
                     if (count == 4) return tetri;
                 }
             return tetri;
+        }
+
+        public Coord[] ConvertToCoord()
+        {
+            return ConvertToCoord(this, this.PositionX, this.PositionY);
         }
 
         private void CreateStandardTetri(Tetri tetri)

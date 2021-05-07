@@ -86,10 +86,22 @@ namespace TetrisModel
             else if (maxX + positionX >= FieldSizeX - 1)
                 distance = FieldSizeX - 1 - (maxX + positionX);
 
+            freeway = IsSquareFree(tetri, positionX, positionY);
+
             if (maxY + positionY >= FieldSizeY)
                 freeway = false;
 
             return (freeway, distance);
+        }
+
+        private bool CollisionWithBorder(Tetromino matrixTetri, int positionX, int positionY)
+        {
+            bool collision = false;
+            Coord[] current = Tetromino.ConvertToFieldCoord(matrixTetri, positionX, positionY);
+            //var(minX, maxX, minY, maxY) current.
+            
+
+                return collision;
         }
 
         private bool BottomCollision(Tetromino tetri, int fieldX, int fieldY)
@@ -142,6 +154,8 @@ namespace TetrisModel
 
         public void MoveLeft()
         {
+            if (!IsSquareFree(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY))
+                return;
             var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
             if (CurrentTetri.PositionX > 0 || distance == 1)
             {
@@ -153,6 +167,8 @@ namespace TetrisModel
 
         public void MoveRight()
         {
+            if (!IsSquareFree(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY))
+                return;
             var (_, distance) = CollisionDetection(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
             if (CurrentTetri.PositionX < FieldSizeX - 4 || distance == 1)
             {
@@ -171,8 +187,20 @@ namespace TetrisModel
             if (distance < 0)
             {
                 distance = Math.Abs(distance);
-                if (CurrentTetri.PositionX > FieldSizeX / 2) CurrentTetri.PositionX -= distance;
-                if (CurrentTetri.PositionX < FieldSizeX / 2) CurrentTetri.PositionX += distance;
+                if (CurrentTetri.PositionX > FieldSizeX / 2) 
+                {
+                    Tetromino tmp = CurrentTetri.GetCopy();
+                    tmp.RotateRight();
+                    if (IsSquareFree(tmp, CurrentTetri.PositionX - distance, CurrentTetri.PositionY))
+                        CurrentTetri.PositionX -= distance;
+                }
+                if (CurrentTetri.PositionX < FieldSizeX / 2)
+                {
+                    Tetromino tmp = CurrentTetri.GetCopy();
+                    tmp.RotateRight();
+                    if (IsSquareFree(tmp, CurrentTetri.PositionX + distance, CurrentTetri.PositionY))
+                        CurrentTetri.PositionX += distance;
+                }
             }
             CurrentTetri.RotateRight();
             if (FieldChanged != null)
@@ -188,8 +216,20 @@ namespace TetrisModel
             if (distance < 0)
             {
                 distance = Math.Abs(distance);
-                if (CurrentTetri.PositionX > FieldSizeX / 2) CurrentTetri.PositionX -= distance;
-                if (CurrentTetri.PositionX < FieldSizeX / 2) CurrentTetri.PositionX += distance;
+                if (CurrentTetri.PositionX > FieldSizeX / 2)
+                {
+                    Tetromino tmp = CurrentTetri.GetCopy();
+                    tmp.RotateLeft();
+                    if (IsSquareFree(tmp, CurrentTetri.PositionX - distance, CurrentTetri.PositionY))
+                        CurrentTetri.PositionX -= distance;
+                }
+                if (CurrentTetri.PositionX < FieldSizeX / 2)
+                {
+                    Tetromino tmp = CurrentTetri.GetCopy();
+                    tmp.RotateLeft();
+                    if (IsSquareFree(tmp, CurrentTetri.PositionX + distance, CurrentTetri.PositionY))
+                        CurrentTetri.PositionX += distance;
+                }
             }
             CurrentTetri.RotateLeft();
             if (FieldChanged != null)

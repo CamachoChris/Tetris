@@ -17,7 +17,7 @@ namespace TetrisModel
         public event EventHandler FieldChanged;
         public event EventHandler ShowNextTetri;
 
-        public List<CoordListingTetri> landedTetri { get; private set; } = new List<CoordListingTetri>();
+        public List<CoordListingTetri> LandedTetri { get; private set; } = new List<CoordListingTetri>();
 
         public TetrisField(int fieldSizeX, int fieldSizeY)
         {
@@ -25,11 +25,10 @@ namespace TetrisModel
             FieldSizeY = fieldSizeY;
 
             CurrentTetri = new MatrixTetri(FieldSizeX / 2 - 2, -4);
-            CurrentTetri.BeRandomTetri();
-            //CurrentTetri.BeStandardTetri(Tetri.I); 
+            CurrentTetri.BeRandomStandardTetri();
 
             NextTetri = new MatrixTetri(0, 0);
-            NextTetri.BeRandomTetri();
+            NextTetri.BeRandomStandardTetri();
         }
 
         public StandardTetriType GetCurrentTetriType()
@@ -53,9 +52,10 @@ namespace TetrisModel
             for (int i = 0; i < moveOrder.Length; i++)
             {
                 moveValue = moveOrder[i];
-                CoordListingTetri current = new CoordListingTetri(matrixTetri, positionX, positionY);
+
                 borderCollision = CollisionWithBorder(matrixTetri, positionX + moveValue, positionY);
                 squareCollision = CollisionWithSquare(matrixTetri, positionX + moveValue, positionY);
+
                 if (!borderCollision && !squareCollision)
                     return (false, moveValue);
             }
@@ -64,11 +64,11 @@ namespace TetrisModel
 
         private bool CollisionWithSquare(MatrixTetri matrixTetri, int positionX, int positionY)
         {
-            if (landedTetri.Count == 0)
+            if (LandedTetri.Count == 0)
                 return false;
 
             CoordListingTetri current = new CoordListingTetri(matrixTetri, positionX, positionY);
-            foreach (var entry in landedTetri)
+            foreach (var entry in LandedTetri)
             {
                 for (int i = 0; i < current.Listing.Length; i++)
                     for (int j = 0; j < entry.Listing.Length; j++)
@@ -88,14 +88,14 @@ namespace TetrisModel
             return collision;
         }
 
-        private (bool collision, int moveValue) RightRotationCollision(MatrixTetri matrixTetri, int positionX, int positionY)
+        private (bool collision, int moveValue) RightRotationCollision(MatrixTetri matrixTetri)
         {
             MatrixTetri rotatedTetri = matrixTetri.GetCopy();
             rotatedTetri.RotateRight();
             return HorizontalPlaceFinder(rotatedTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
         }
 
-        private (bool collision, int moveValue) LeftRotationCollision(MatrixTetri matrixTetri, int positionX, int positionY)
+        private (bool collision, int moveValue) LeftRotationCollision(MatrixTetri matrixTetri)
         {
             MatrixTetri rotatedTetri = matrixTetri.GetCopy();
             rotatedTetri.RotateLeft();
@@ -114,12 +114,12 @@ namespace TetrisModel
                 if (TetriLanded != null)
                     TetriLanded(null, EventArgs.Empty);
 
-                landedTetri.Add(new CoordListingTetri(CurrentTetri));
+                LandedTetri.Add(new CoordListingTetri(CurrentTetri));
                 NextTetri.PositionX = FieldSizeX / 2 - 2;
                 NextTetri.PositionY = -4;
                 CurrentTetri = NextTetri;
                 MatrixTetri tmp = new MatrixTetri(0, 0);
-                tmp.BeRandomTetri();
+                tmp.BeRandomStandardTetri();
                 NextTetri = tmp;
 
                 if (ShowNextTetri != null)
@@ -160,7 +160,7 @@ namespace TetrisModel
 
         public void RotateRight()
         {
-            var (collision, moveValue) = RightRotationCollision(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            var (collision, moveValue) = RightRotationCollision(CurrentTetri);
 
             if (!collision)
             {
@@ -174,7 +174,7 @@ namespace TetrisModel
 
         public void RotateLeft()
         {
-            var (collision, moveValue) = LeftRotationCollision(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY);
+            var (collision, moveValue) = LeftRotationCollision(CurrentTetri);
 
             if (!collision)
             {

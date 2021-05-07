@@ -23,19 +23,23 @@ namespace TetrisModel
 
         public MatrixTetri GetCopy()
         {
-            MatrixTetri copiedMatrixTetri = new MatrixTetri();
-            copiedMatrixTetri.StandardType = this.StandardType;
-            copiedMatrixTetri.PositionX = this.PositionX;
-            copiedMatrixTetri.PositionY = this.PositionY;
+            MatrixTetri copiedMatrixTetri = new MatrixTetri
+            {
+                StandardType = this.StandardType,
+                PositionX = this.PositionX,
+                PositionY = this.PositionY
+            };
+
             for (int x = 0; x < 4; x++)
                 for (int y = 0; y < 4; y++)
                 {
                     copiedMatrixTetri.Matrix[x, y] = this.Matrix[x, y];
                 }
+
             return copiedMatrixTetri;
         }
 
-        public void BeRandomTetri()
+        public void BeRandomStandardTetri()
         {
             Random rnd = new Random();
             int standardTetriPosition = rnd.Next(6);
@@ -46,9 +50,9 @@ namespace TetrisModel
                 RotateRight();                       
         }
 
-        public void BeStandardTetri(StandardTetriType tetri)
+        public void BeThatStandardTetri(StandardTetriType tetriPosition)
         {
-            CreateStandardTetri(tetri);
+            CreateStandardTetri(tetriPosition);
         }
 
         public void RotateLeft()
@@ -140,7 +144,7 @@ namespace TetrisModel
             return (minX, maxX, minY, maxY);
         }
 
-        private void CreateRandomTetro()
+        public void BeRandomTetro()
         {
             Random rnd = new Random();
             Matrix[2, 2] = true;

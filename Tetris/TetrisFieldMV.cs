@@ -23,12 +23,12 @@ namespace Tetris
 
         private readonly Canvas TetrisCanvas;
         private readonly Canvas TeaserCanvas;
-        private TetrisField tetrisField;
+        private readonly TetrisField tetrisField;
         
         private TetriMV currentTetri;
         private TetriMV nextTetri;
 
-        private List<TetriMV> FieldTetri = new List<TetriMV>();
+        private readonly List<TetriMV> FieldTetri = new List<TetriMV>();
 
         public TetrisFieldMV(Canvas canvas, Canvas teasercanvas, TetrisField field, int squaresize)
         {
@@ -49,15 +49,21 @@ namespace Tetris
 
         private void MakeNewCurrent()
         {
-            currentTetri = new TetriMV(TetrisCanvas, SquareSize);
-            currentTetri.CoordTetri = new CoordListingTetri(this.tetrisField.CurrentTetri);
+            currentTetri = new TetriMV(TetrisCanvas, SquareSize)
+            {
+                CoordTetri = new CoordListingTetri(this.tetrisField.CurrentTetri)
+            };
         }
 
         private void MakeNewNext()
         {
             TeaserCanvas.Children.Clear();
-            nextTetri = new TetriMV(TeaserCanvas, SquareSize);
-            nextTetri.CoordTetri = new CoordListingTetri(tetrisField.NextTetri);
+
+            nextTetri = new TetriMV(TeaserCanvas, SquareSize)
+            {
+                CoordTetri = new CoordListingTetri(tetrisField.NextTetri)
+            };
+
             nextTetri.Paint();
         }
 
@@ -102,24 +108,6 @@ namespace Tetris
         public void RotateRight()
         {
             tetrisField.RotateRight();
-        }
-
-        private void PaintField()
-        {
-            foreach(var entry in FieldTetri)
-            {
-                entry.Paint();
-            }
-        }
-
-        private int CountLandedSquaresModel(List<CoordListingTetri> landedTetrominos)
-        {
-            int count = 0;
-            foreach (var entry in landedTetrominos)
-            {
-                count += entry.Listing.Length;
-            }
-            return count;
         }
     }
 }

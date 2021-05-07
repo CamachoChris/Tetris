@@ -25,10 +25,10 @@ namespace Tetris
         readonly Brush ColorJ = Brushes.CornflowerBlue;
         readonly Brush ColorS = Brushes.Crimson;
         readonly Brush ColorZ = Brushes.DarkOrchid;
+        private readonly int _squareSize;
 
-        private Rectangle[] _rectangleTetri = new Rectangle[4];
+        private readonly Rectangle[] _rectangleTetri = new Rectangle[4];
         private Brush _tetriColor;
-        private int _squareSize;
 
         private CoordListingTetri _coordTetri;
         public CoordListingTetri CoordTetri

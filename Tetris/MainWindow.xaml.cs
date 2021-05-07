@@ -30,8 +30,8 @@ namespace Tetris
         const int FieldSizeX = 10; //horizontal
         const int FieldSizeY = 18; //vertical
 
-        TetrisField tetrisField;
-        TetrisFieldMV tetrisFieldMV;        
+        readonly TetrisField tetrisField;
+        readonly TetrisFieldMV tetrisFieldMV;        
 
         public MainWindow()
         {

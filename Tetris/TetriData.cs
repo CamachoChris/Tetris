@@ -9,11 +9,11 @@ namespace TetrisModel
         public int X;
         public int Y;
     }
-    public enum Tetri
+    public enum StandardTetriType
     {
         I, O, L, J, S, Z
     }
-    public partial class Tetromino
+    public partial class MatrixTetri
     {
 
         private readonly Coord[] I = {

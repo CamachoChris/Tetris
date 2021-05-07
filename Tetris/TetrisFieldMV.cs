@@ -40,8 +40,6 @@ namespace Tetris
             field.FieldChanged += TetrisEvent_FieldChanged;
             field.TetriLanded += TetrisEvent_TetriLanded;
             field.ShowNextTetri += Field_ShowNextTetri;
-
-            MakeNewCurrent();
         }
 
         private void Field_ShowNextTetri(object sender, EventArgs e)
@@ -52,14 +50,14 @@ namespace Tetris
         private void MakeNewCurrent()
         {
             currentTetri = new TetriMV(TetrisCanvas, SquareSize);
-            currentTetri.CoordTetri = new CoordTetromino(this.tetrisField.CurrentTetri);
+            currentTetri.CoordTetri = new CoordListingTetri(this.tetrisField.CurrentTetri);
         }
 
         private void MakeNewNext()
         {
             TeaserCanvas.Children.Clear();
             nextTetri = new TetriMV(TeaserCanvas, SquareSize);
-            nextTetri.CoordTetri = new CoordTetromino(tetrisField.NextTetri);
+            nextTetri.CoordTetri = new CoordListingTetri(tetrisField.NextTetri);
             nextTetri.Paint();
         }
 
@@ -71,12 +69,13 @@ namespace Tetris
 
         private void TetrisEvent_FieldChanged(object sender, EventArgs e)
         {
-            currentTetri.CoordTetri = new CoordTetromino(tetrisField.CurrentTetri);
+            currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
             currentTetri.Paint();
         }
 
         public void Start()
         {
+            MakeNewCurrent();
             MakeNewNext();
         }
 
@@ -113,12 +112,12 @@ namespace Tetris
             }
         }
 
-        private int CountLandedSquaresModel(List<CoordTetromino> landedTetrominos)
+        private int CountLandedSquaresModel(List<CoordListingTetri> landedTetrominos)
         {
             int count = 0;
             foreach (var entry in landedTetrominos)
             {
-                count += entry.Tetri.Length;
+                count += entry.Listing.Length;
             }
             return count;
         }

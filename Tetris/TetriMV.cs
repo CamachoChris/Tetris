@@ -26,12 +26,12 @@ namespace Tetris
         readonly Brush ColorS = Brushes.Crimson;
         readonly Brush ColorZ = Brushes.DarkOrchid;
 
-        public Rectangle[] RectangleTetri = new Rectangle[4];
-        public Brush TetriColor;
-        public int SquareSize;
+        private Rectangle[] _rectangleTetri = new Rectangle[4];
+        private Brush _tetriColor;
+        private int _squareSize;
 
-        private CoordTetromino _coordTetri;
-        public CoordTetromino CoordTetri
+        private CoordListingTetri _coordTetri;
+        public CoordListingTetri CoordTetri
         {
             get => _coordTetri;
             set
@@ -45,51 +45,51 @@ namespace Tetris
         
         public TetriMV(Canvas canvas, int squareSize)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < _rectangleTetri.Length; i++)
             {
-                RectangleTetri[i] = new Rectangle() { Height = squareSize, Width = squareSize, RadiusX = 5, RadiusY = 5 };
-                RectangleTetri[i].Fill = Brushes.Transparent;
-                canvas.Children.Add(RectangleTetri[i]);
+                _rectangleTetri[i] = new Rectangle() { Height = squareSize, Width = squareSize, RadiusX = 5, RadiusY = 5 };
+                _rectangleTetri[i].Fill = Brushes.Transparent;
+                canvas.Children.Add(_rectangleTetri[i]);
             }
-            SquareSize = squareSize;
+            _squareSize = squareSize;
         }
 
         public void Paint()
         {
-            for (int i = 0; i < RectangleTetri.Length; i++)
-                PaintSquare(RectangleTetri[i], CoordTetri.Tetri[i].X, CoordTetri.Tetri[i].Y);
+            for (int i = 0; i < _rectangleTetri.Length; i++)
+                PaintSquare(_rectangleTetri[i], CoordTetri.Listing[i].X, CoordTetri.Listing[i].Y);
         }
 
-        public void PaintSquare(Rectangle rectangle, int x, int y)
+        private void PaintSquare(Rectangle square, int x, int y)
         {
             if (y >= 0)
-                rectangle.Fill = TetriColor;
+                square.Fill = _tetriColor;
             else
-                rectangle.Fill = Brushes.Transparent;
-            rectangle.Margin = new Thickness(x * SquareSize, y * SquareSize, 0, 0);
+                square.Fill = Brushes.Transparent;
+            square.Margin = new Thickness(x * _squareSize, y * _squareSize, 0, 0);
         }
 
         private void SetTetriColor()
         {
             switch (CoordTetri.TetriType)
             {
-                case Tetri.I:
-                    TetriColor = ColorI;
+                case StandardTetriType.I:
+                    _tetriColor = ColorI;
                     break;
-                case Tetri.O:
-                    TetriColor = ColorO;
+                case StandardTetriType.O:
+                    _tetriColor = ColorO;
                     break;
-                case Tetri.L:
-                    TetriColor = ColorL;
+                case StandardTetriType.L:
+                    _tetriColor = ColorL;
                     break;
-                case Tetri.J:
-                    TetriColor = ColorJ;
+                case StandardTetriType.J:
+                    _tetriColor = ColorJ;
                     break;
-                case Tetri.S:
-                    TetriColor = ColorS;
+                case StandardTetriType.S:
+                    _tetriColor = ColorS;
                     break;
-                case Tetri.Z:
-                    TetriColor = ColorZ;
+                case StandardTetriType.Z:
+                    _tetriColor = ColorZ;
                     break;
             };
         }

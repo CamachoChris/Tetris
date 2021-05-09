@@ -29,11 +29,11 @@ namespace TetrisModel
             GetFromMatrix(matrixTetri, positionX, positionY);
         }
 
-        public void Fall()
+        public void Fall(int lineCount)
         {
             for (int i = 0; i < Listing.Length; i++)
             {
-                Listing[i].Y++;
+                Listing[i].Y += lineCount;
             }
         }
 

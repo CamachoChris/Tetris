@@ -77,8 +77,15 @@ namespace Tetris
 
         private void TetrisEvent_FieldChanged(object sender, EventArgs e)
         {
+            foreach(var entry in FieldTetri)
+            {
+                if (entry.CoordTetri == null)
+                    FieldTetri.Remove(entry);
+            }
             currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
             currentTetri.Paint();
+            foreach (var entry in FieldTetri)
+                entry.Paint();
         }
 
         public void Start()

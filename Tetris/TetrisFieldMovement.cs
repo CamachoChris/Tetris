@@ -21,7 +21,8 @@ namespace TetrisModel
                     TetriLanded(null, EventArgs.Empty);
 
                 PrepareForNextTetri();
-                FindFinishedLines();
+
+                SeekAndDestroyFinishedLines();
 
                 if (ShowNextTetri != null)
                     ShowNextTetri(null, EventArgs.Empty);

@@ -32,18 +32,13 @@ namespace TetrisModel
             NextTetri.BeRandomStandardTetri();
         }
 
-        public StandardTetriType GetCurrentTetriType()
-        {
-            return CurrentTetri.StandardType;
-        }
-
         private void PrepareForNextTetri()
         {
-            SetStartPosition(NextTetri);
             CurrentTetri = NextTetri;
-            MatrixTetri tmp = new MatrixTetri(0, 0);
-            tmp.BeRandomStandardTetri();
-            NextTetri = tmp;
+            SetStartPosition(CurrentTetri);
+
+            NextTetri = new MatrixTetri(0, 0);
+            NextTetri.BeRandomStandardTetri();
         }
 
         private void SetStartPosition(MatrixTetri matrixTetri)
@@ -53,6 +48,10 @@ namespace TetrisModel
             matrixTetri.PositionY = -1 - maxY;
         }
 
+        /// <summary>
+        /// Fills a 2D-Array analogous to the field with the tetris. True = there is one.
+        /// </summary>
+        /// <returns></returns>
         private bool[,] ReturnFilledField()
         {
             bool[,] filledField = new bool[FieldSizeX, FieldSizeY];
@@ -66,7 +65,7 @@ namespace TetrisModel
             return filledField;
         }
 
-        private void FindFinishedLines()
+        private void SeekAndDestroyFinishedLines()
         {
             int finishedLineCount = 0;
             bool[,] filledField = ReturnFilledField();
@@ -87,7 +86,24 @@ namespace TetrisModel
                 }
             }
             if (finishedLineCount > 0)
+            {
+                TidyUpLandedList();
                 LetThemFall(finishedLineCount);
+            }
+        }
+
+        private void TidyUpLandedList()
+        {
+            List<CoordListingTetri> emptyEntry = new List<CoordListingTetri>();
+            foreach(var entry in LandedTetri)
+            {
+                if (entry.Listing.Length == 0)
+                    emptyEntry.Add(entry);
+            }
+            foreach(var entry in emptyEntry)
+            {
+                LandedTetri.Remove(entry);
+            }
         }
 
         private void RemovedFinishedLine(int lineNumber)
@@ -100,10 +116,6 @@ namespace TetrisModel
                     if (entry.Listing[i].Y == lineNumber)
                     {
                         entry.RemoveAt(i);
-                        if (entry.Listing.Length == 0)
-                        {
-                            LandedTetri.Remove(entry);
-                        }
                         i--;
                     }
                     i++;
@@ -131,7 +143,7 @@ namespace TetrisModel
 
             if (!borderCollision && !squareCollision)
             {
-                landedTetri.Fall(1);
+                landedTetri.FallOne();
                 return true;
             }
             return false;

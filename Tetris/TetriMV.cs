@@ -45,8 +45,6 @@ namespace Tetris
 
         private void _coordTetri_RemoveOne(object sender, EventArgs e)
         {
-            //_canvas.Children.Clear();
-            //_rectangleTetri[_rectangleTetri.Count - 1].Visibility = Visibility.Hidden;
             _canvas.Children.Remove(_rectangleTetri[_rectangleTetri.Count - 1]);
             _rectangleTetri.RemoveAt(_rectangleTetri.Count - 1);
             Paint();

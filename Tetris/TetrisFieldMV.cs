@@ -17,8 +17,7 @@ using System.Diagnostics;
 
 namespace Tetris
 {
-
-    class TetrisFieldMV
+    partial class TetrisFieldMV
     {
         private readonly int SquareSize;
 
@@ -43,11 +42,6 @@ namespace Tetris
             field.ShowNextTetri += Field_ShowNextTetri;
         }
 
-        private void Field_ShowNextTetri(object sender, EventArgs e)
-        {
-            MakeNewNext();
-        }
-
         private void MakeNewCurrent()
         {
             currentTetri = new TetriMV(TetrisCanvas, SquareSize)
@@ -68,24 +62,18 @@ namespace Tetris
             nextTetri.Paint();
         }
 
-        private void TetrisEvent_TetriLanded(object sender, EventArgs e)
+        private void TidyUpLandedList()
         {
-            currentTetri.CoordTetri = tetrisField.LandedTetri[tetrisField.LandedTetri.Count - 1];
-            FieldTetri.Add(currentTetri);
-            MakeNewCurrent();
-        }
-
-        private void TetrisEvent_FieldChanged(object sender, EventArgs e)
-        {
-            foreach(var entry in FieldTetri)
-            {
-                if (entry.CoordTetri == null)
-                    FieldTetri.Remove(entry);
-            }
-            currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
-            currentTetri.Paint();
+            List<TetriMV> emptyEntry = new List<TetriMV>();
             foreach (var entry in FieldTetri)
-                entry.Paint();
+            {
+                if (entry.CoordTetri.Listing.Length == 0)
+                    emptyEntry.Add(entry);
+            }
+            foreach (var entry in emptyEntry)
+            {
+                FieldTetri.Remove(entry);
+            }
         }
 
         public void Start()

@@ -86,7 +86,10 @@ namespace TetrisModel
                 }
             }
             if (finishedLineCount > 0)
+            {
                 TidyUpLandedList();
+                SeekAndDestroyFinishedLines();
+            }
 
             return finishedLineCount;
         }
@@ -102,6 +105,12 @@ namespace TetrisModel
             foreach(var entry in emptyEntry)
             {
                 LandedTetri.Remove(entry);
+            }
+
+            // Moving down squares hanging in the air.
+            foreach(var entry in LandedTetri)
+            {
+                entry.CompressUpDown();
             }
         }
 

@@ -25,14 +25,14 @@ namespace Tetris
 
             currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
             currentTetri.Paint();
-            foreach (var entry in FieldTetri)
+            foreach (var entry in LandedTetriMV)
                 entry.Paint();
         }
 
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)
         {
             currentTetri.CoordTetri = tetrisField.LandedTetri[tetrisField.LandedTetri.Count - 1];
-            FieldTetri.Add(currentTetri);
+            LandedTetriMV.Add(currentTetri);
             MakeNewCurrent();
         }
 

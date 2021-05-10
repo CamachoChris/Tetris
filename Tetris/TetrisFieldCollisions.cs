@@ -35,20 +35,21 @@ namespace TetrisModel
         private bool CollisionWithSquare(MatrixTetri matrixTetri, int positionX, int positionY)
         {
             CoordListingTetri coordTetri = new CoordListingTetri(matrixTetri, positionX, positionY);            
-            return CollisionWithSquare(coordTetri);
+            return CollisionWithSquare(coordTetri, null);
         }
 
-        private bool CollisionWithSquare(CoordListingTetri coordTetri)
+        private bool CollisionWithSquare(CoordListingTetri coordTetri, CoordListingTetri exceptTetri)
         {
             if (LandedTetri.Count == 0)
                 return false;
 
             foreach (var entry in LandedTetri)
             {
-                for (int i = 0; i < coordTetri.Listing.Length; i++)
-                    for (int j = 0; j < entry.Listing.Length; j++)
-                        if (coordTetri.Listing[i].X == entry.Listing[j].X && coordTetri.Listing[i].Y == entry.Listing[j].Y)
-                            return true;
+                if (entry != exceptTetri)
+                    for (int i = 0; i < coordTetri.Listing.Length; i++)
+                        for (int j = 0; j < entry.Listing.Length; j++)
+                            if (coordTetri.Listing[i].X == entry.Listing[j].X && coordTetri.Listing[i].Y == entry.Listing[j].Y)
+                                return true;
             }
             return false;
         }

@@ -65,7 +65,7 @@ namespace TetrisModel
             return filledField;
         }
 
-        private void SeekAndDestroyFinishedLines()
+        private int SeekAndDestroyFinishedLines()
         {
             int finishedLineCount = 0;
             bool[,] filledField = ReturnFilledField();
@@ -86,10 +86,9 @@ namespace TetrisModel
                 }
             }
             if (finishedLineCount > 0)
-            {
                 TidyUpLandedList();
-                LetThemFall(finishedLineCount);
-            }
+
+            return finishedLineCount;
         }
 
         private void TidyUpLandedList()
@@ -123,29 +122,39 @@ namespace TetrisModel
             }
         }
 
-        private void LetThemFall(int lineCount)
+        private void LetThemFall()
         {
-            bool couldFall = false;
-            //do
+            bool couldFall;
+            do
             {
+                couldFall = false;
                 foreach (var entry in LandedTetri)
                 {
-                    if (FallingDown(entry))
+                    if (FallingDown(entry) == true)
                         couldFall = true;
                 }
             } while (couldFall);
         }
 
+        /// <summary>
+        /// Checks if falling is possible and lets the Tetris fall.
+        /// </summary>
+        /// <param name="landedTetri"></param>
+        /// <returns>true if could fall, false if not</returns>
         private bool FallingDown(CoordListingTetri landedTetri)
         {
-            bool borderCollision = CollisionWithBorder(landedTetri);
-            bool squareCollision = CollisionWithSquare(landedTetri);
+            CoordListingTetri copiedTetri = landedTetri.GetCopy();
+            copiedTetri.FallOne();
 
-            if (!borderCollision && !squareCollision)
-            {
-                landedTetri.FallOne();
-                return true;
-            }
+            bool borderCollision = CollisionWithBorder(copiedTetri);
+            bool squareCollision = CollisionWithSquare(copiedTetri, landedTetri);
+
+            if (!borderCollision)
+                if (!squareCollision)
+                {
+                    landedTetri.FallOne();
+                    return true;
+                }
             return false;
         }
     }

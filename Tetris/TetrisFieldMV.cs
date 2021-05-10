@@ -28,7 +28,7 @@ namespace Tetris
         private TetriMV currentTetri;
         private TetriMV nextTetri;
 
-        private readonly List<TetriMV> FieldTetri = new List<TetriMV>();
+        private readonly List<TetriMV> LandedTetriMV = new List<TetriMV>();
 
         public TetrisFieldMV(Canvas canvas, Canvas teasercanvas, TetrisField field, int squaresize)
         {
@@ -65,14 +65,14 @@ namespace Tetris
         private void TidyUpLandedList()
         {
             List<TetriMV> emptyEntry = new List<TetriMV>();
-            foreach (var entry in FieldTetri)
+            foreach (var entry in LandedTetriMV)
             {
                 if (entry.CoordTetri.Listing.Length == 0)
                     emptyEntry.Add(entry);
             }
             foreach (var entry in emptyEntry)
             {
-                FieldTetri.Remove(entry);
+                LandedTetriMV.Remove(entry);
             }
         }
 

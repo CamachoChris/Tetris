@@ -29,6 +29,22 @@ namespace TetrisModel
             GetFromMatrix(matrixTetri, positionX, positionY);
         }
 
+        public CoordListingTetri GetCopy()
+        {
+            CoordListingTetri copiedTetri = new CoordListingTetri();
+
+            copiedTetri.Listing = new Coord[this.Listing.Length];
+            for (int i = 0; i < this.Listing.Length; i++)
+            {
+                copiedTetri.Listing[i] = this.Listing[i];
+            }
+
+            copiedTetri.TetriType = this.TetriType;
+            copiedTetri.RemoveOne = this.RemoveOne;
+
+            return copiedTetri;
+        }
+
         public void FallOne()
         {
             for (int i = 0; i < Listing.Length; i++)

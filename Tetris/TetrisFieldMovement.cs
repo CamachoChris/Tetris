@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace TetrisModel
 {
@@ -22,7 +23,10 @@ namespace TetrisModel
 
                 PrepareForNextTetri();
 
-                SeekAndDestroyFinishedLines();
+                int finishedLines = SeekAndDestroyFinishedLines();
+                if (finishedLines > 0)
+                    LetThemFall();
+
 
                 if (ShowNextTetri != null)
                     ShowNextTetri(null, EventArgs.Empty);

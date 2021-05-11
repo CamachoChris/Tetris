@@ -15,6 +15,9 @@ namespace TetrisModel
 
         public event EventHandler TetriMoved;
         public event EventHandler TetriLanded;
+        public event EventHandler TetriGameOver;
+
+        private bool _gameRunning;
 
         readonly private System.Timers.Timer tick = new System.Timers.Timer(750);
 
@@ -46,6 +49,13 @@ namespace TetrisModel
         public void Start()
         {
             tick.Enabled = true;
+            _gameRunning = true;
+        }
+
+        public void Stop()
+        {
+            _gameRunning = false;
+            tick.Stop();
         }
 
         public int GetLandedSquareCount()

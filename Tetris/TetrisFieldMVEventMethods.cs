@@ -37,5 +37,13 @@ namespace Tetris
                 UpdateField();
             }));
         }
+
+        private void Field_TetriGameOver(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                MessageBox.Show("Du hast leider verloren.");
+            }));
+        }
     }
 }

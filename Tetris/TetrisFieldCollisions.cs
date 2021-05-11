@@ -1,11 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace TetrisModel
 {
     public partial class TetrisField
     {
+        private bool GameOverCheck(MatrixTetri matrixTetri, int positionX, int positionY)
+        {
+            bool gameOver = false;
+            bool squareCollision = CollisionWithSquare(matrixTetri, positionX, positionY);
+            var (_, _, minY, _) = matrixTetri.GetRange();
+            if (squareCollision && (minY + positionY - 1) < 0)
+                gameOver = true;
+            Debug.WriteLine($"gameOver = {gameOver}, minY = {minY + positionY}");
+            return gameOver;
+        }
+
         /// <summary>
         /// Tries to find a place by moving the Tetri horizontally from -2 to +2.
         /// </summary>

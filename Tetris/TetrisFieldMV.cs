@@ -39,6 +39,7 @@ namespace Tetris
 
             field.TetriMoved += Field_TetriMoved;
             field.TetriLanded += TetrisEvent_TetriLanded;
+            field.TetriGameOver += Field_TetriGameOver;
         }
 
         private void MakeNewCurrent()

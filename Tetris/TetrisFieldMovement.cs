@@ -9,9 +9,21 @@ namespace TetrisModel
     {
         public void MoveDown()
         {
+            if (!_gameRunning) return;
+
+            bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
+            if (gameOver)
+            {
+                Stop();
+
+                if (TetriGameOver != null)
+                    TetriGameOver(null, EventArgs.Empty);
+
+                return;
+            }
+
             bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
-
             if (!borderCollision && !squareCollision)
             {
                 CurrentTetri.PositionY++;
@@ -36,6 +48,8 @@ namespace TetrisModel
 
         public void MoveLeft()
         {
+            if (!_gameRunning) return;
+
             bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY);
             bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY);
 
@@ -50,6 +64,8 @@ namespace TetrisModel
 
         public void MoveRight()
         {
+            if (!_gameRunning) return;
+
             bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY);
             bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY);
 
@@ -64,6 +80,8 @@ namespace TetrisModel
 
         public void RotateRight()
         {
+            if (!_gameRunning) return;
+
             var (collision, moveValue) = RightRotationCollision(CurrentTetri);
 
             if (!collision)
@@ -78,6 +96,8 @@ namespace TetrisModel
 
         public void RotateLeft()
         {
+            if (!_gameRunning) return;
+
             var (collision, moveValue) = LeftRotationCollision(CurrentTetri);
 
             if (!collision)

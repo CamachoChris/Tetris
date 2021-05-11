@@ -25,7 +25,6 @@ namespace Tetris
             {
                 UpdateTetri();
             }));
-
         }
 
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)

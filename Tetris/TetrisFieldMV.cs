@@ -88,9 +88,7 @@ namespace Tetris
 
         private void UpdateField()
         {
-            Debug.WriteLine($"Before Sync -> Model-List: {tetrisField.GetLandedSquareCount()}, VM-List: {LandedSquaresMV.Count}");
             SyncLandedList();
-            Debug.WriteLine($" After Sync -> Model-List: {tetrisField.GetLandedSquareCount()}, VM-List: {LandedSquaresMV.Count}");
 
             int i = 0;
             foreach (var entry in tetrisField.LandedTetri)

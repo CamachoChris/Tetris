@@ -13,13 +13,15 @@ namespace TetrisModel
             bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
 
             if (!borderCollision && !squareCollision)
+            {
                 CurrentTetri.PositionY++;
+
+                if (TetriMoved != null)
+                    TetriMoved(null, EventArgs.Empty);
+            }
             else
             {
                 LandedTetri.Add(new CoordListingTetri(CurrentTetri));
-
-                if (TetriLanded != null)
-                    TetriLanded(null, EventArgs.Empty);
 
                 PrepareForNextTetri();
 
@@ -27,13 +29,9 @@ namespace TetrisModel
                 if (finishedLines > 0)
                     LetThemFall();
 
-
-                if (ShowNextTetri != null)
-                    ShowNextTetri(null, EventArgs.Empty);
+                if (TetriLanded != null)
+                    TetriLanded(null, EventArgs.Empty);
             }
-
-            if (FieldChanged != null)
-                FieldChanged(null, EventArgs.Empty);
         }
 
         public void MoveLeft()
@@ -45,8 +43,8 @@ namespace TetrisModel
             {
                 CurrentTetri.PositionX--;
 
-                if (FieldChanged != null)
-                    FieldChanged(null, EventArgs.Empty);
+                if (TetriMoved != null)
+                    TetriMoved(null, EventArgs.Empty);
             }
         }
 
@@ -59,8 +57,8 @@ namespace TetrisModel
             {
                 CurrentTetri.PositionX++;
 
-                if (FieldChanged != null)
-                    FieldChanged(null, EventArgs.Empty);
+                if (TetriMoved != null)
+                    TetriMoved(null, EventArgs.Empty);
             }
         }
 
@@ -73,8 +71,8 @@ namespace TetrisModel
                 CurrentTetri.PositionX += moveValue;
                 CurrentTetri.RotateRight();
 
-                if (FieldChanged != null)
-                    FieldChanged(null, EventArgs.Empty);
+                if (TetriMoved != null)
+                    TetriMoved(null, EventArgs.Empty);
             }
         }
 
@@ -87,8 +85,8 @@ namespace TetrisModel
                 CurrentTetri.PositionX += moveValue;
                 CurrentTetri.RotateLeft();
 
-                if (FieldChanged != null)
-                    FieldChanged(null, EventArgs.Empty);
+                if (TetriMoved != null)
+                    TetriMoved(null, EventArgs.Empty);
             }
         }
     }

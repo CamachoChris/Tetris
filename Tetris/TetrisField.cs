@@ -13,9 +13,8 @@ namespace TetrisModel
         public MatrixTetri CurrentTetri { get; private set; }
         public MatrixTetri NextTetri { get; private set; }
 
+        public event EventHandler TetriMoved;
         public event EventHandler TetriLanded;
-        public event EventHandler FieldChanged;
-        public event EventHandler ShowNextTetri;
 
         private System.Timers.Timer tick = new System.Timers.Timer(750);
 

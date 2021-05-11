@@ -28,9 +28,7 @@ namespace Tetris
         private TetriMV currentTetri;
         private TetriMV nextTetri;
 
-        private readonly List<TetriMV> LandedTetriMV = new List<TetriMV>();
-
-        private readonly List<TetriMV> LandedSquaresMV = new List<TetriMV>();
+        private readonly List<SquareMV> LandedSquaresMV = new List<SquareMV>();
 
         public TetrisFieldMV(Canvas canvas, Canvas teasercanvas, TetrisField field, int squaresize)
         {
@@ -39,9 +37,8 @@ namespace Tetris
             tetrisField = field;
             SquareSize = squaresize;
 
-            field.FieldChanged += TetrisEvent_FieldChanged;
+            field.TetriMoved += Field_TetriMoved;
             field.TetriLanded += TetrisEvent_TetriLanded;
-            field.ShowNextTetri += Field_ShowNextTetri;
         }
 
         private void MakeNewCurrent()
@@ -74,15 +71,16 @@ namespace Tetris
             {
                 for (int i = 0; i < difference; i++)
                 {
-                    TetriMV nextTetri = new TetriMV(TetrisCanvas, SquareSize, 1);
-                    LandedSquaresMV.Add(nextTetri);
+                    SquareMV nextSquare = new SquareMV(TetrisCanvas, SquareSize);
+                    LandedSquaresMV.Add(nextSquare);
                 }
             }
             else if (difference < 0)
             {
-                for (int i = 0; i < difference; i++)
+                for (int i = 0; i < Math.Abs(difference); i++)
                 {
-                    LandedSquaresMV[LandedSquaresMV.Count - 1].RemoveSquares(1);
+                    Debug.WriteLine("Remove square");
+                    LandedSquaresMV[LandedSquaresMV.Count - 1].RemoveSquare();
                     LandedSquaresMV.RemoveAt(LandedSquaresMV.Count - 1);
                 }
             }
@@ -90,33 +88,28 @@ namespace Tetris
 
         private void UpdateField()
         {
+            Debug.WriteLine($"Before Sync -> Model-List: {tetrisField.GetLandedSquareCount()}, VM-List: {LandedSquaresMV.Count}");
             SyncLandedList();
+            Debug.WriteLine($" After Sync -> Model-List: {tetrisField.GetLandedSquareCount()}, VM-List: {LandedSquaresMV.Count}");
 
             int i = 0;
             foreach (var entry in tetrisField.LandedTetri)
             {
                 for (int j = 0; j < entry.Listing.Length; j++)
                 {
-                    int x = entry.Listing[j].X;
-                    int y = entry.Listing[j].Y;
-                    TetriMV.UpdateSquare(LandedSquaresMV[i].RectangleTetri[0], x, y, LandedSquaresMV[i].SquareSize, LandedSquaresMV[i].TetriColor);
+                    LandedSquaresMV[i].PositionX = entry.Listing[j].X;
+                    LandedSquaresMV[i].PositionY = entry.Listing[j].Y;
+                    LandedSquaresMV[i].TetriColor = SquareMV.GetTetriColor(entry);
+                    LandedSquaresMV[i].UpdateSquare();
+                    i++;
                 }
             }
         }
 
-        private void TidyUpLandedList()
+        private void UpdateTetri()
         {
-            
-            List<TetriMV> emptyEntry = new List<TetriMV>();
-            foreach (var entry in LandedTetriMV)
-            {
-                if (entry.CoordTetri.Listing.Length == 0)
-                    emptyEntry.Add(entry);
-            }
-            foreach (var entry in emptyEntry)
-            {
-                LandedTetriMV.Remove(entry);
-            }
+            currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
+            currentTetri.UpdateTetri();
         }
 
         public void Init()

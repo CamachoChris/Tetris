@@ -10,8 +10,6 @@ namespace TetrisModel
         public StandardTetriType TetriType;
         public Coord[] Listing;
 
-        public event EventHandler RemoveOne;
-
         public CoordListingTetri()
         {
             Listing = new Coord[4];
@@ -40,7 +38,6 @@ namespace TetrisModel
             }
 
             copiedTetri.TetriType = this.TetriType;
-            copiedTetri.RemoveOne = this.RemoveOne;
 
             return copiedTetri;
         }
@@ -112,9 +109,6 @@ namespace TetrisModel
                     shortenedListing[ListingCount++] = Listing[i];
             }
             Listing = shortenedListing;
-
-            if (RemoveOne != null)
-                RemoveOne(null, EventArgs.Empty);
         }
 
         public (int minX, int maxX, int minY, int maxY) GetRange()

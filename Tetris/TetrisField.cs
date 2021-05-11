@@ -17,6 +17,8 @@ namespace TetrisModel
         public event EventHandler FieldChanged;
         public event EventHandler ShowNextTetri;
 
+        private System.Timers.Timer tick = new System.Timers.Timer(750);
+
         public List<CoordListingTetri> LandedTetri { get; private set; } = new List<CoordListingTetri>();
 
         public TetrisField(int fieldSizeX, int fieldSizeY)
@@ -24,12 +26,37 @@ namespace TetrisModel
             FieldSizeX = fieldSizeX;
             FieldSizeY = fieldSizeY;
 
+            tick.Elapsed += Tick_Elapsed;
+        }
+
+        private void Tick_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            MoveDown();
+        }
+
+        public void Init()
+        {
             CurrentTetri = new MatrixTetri();
             CurrentTetri.BeRandomStandardTetri();
             SetStartPosition(CurrentTetri);
 
             NextTetri = new MatrixTetri(0, 0);
             NextTetri.BeRandomStandardTetri();
+        }
+
+        public void Start()
+        {
+            tick.Enabled = true;
+        }
+
+        public int GetLandedSquareCount()
+        {
+            int count = 0;
+            foreach(var entry in LandedTetri)
+            {
+                count += entry.Listing.Length;
+            }
+            return count;
         }
 
         private void PrepareForNextTetri()

@@ -24,7 +24,10 @@
                 <ColumnDefinition Width="150"/>
             </Grid.ColumnDefinitions>
             <Canvas x:Name="PlayingCanvas" Height="540" Width="300" Background="AliceBlue"/>
-            <Canvas Grid.Column="1" x:Name="TeaserCanvas" Height="120" Width="120" Background="AliceBlue"/>
+            <StackPanel Grid.Column="1">
+                <Button x:Name="StartButton" Content="Start" Height="40" Width="40" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,30" Click="StartButton_Click" />
+                <Canvas x:Name="TeaserCanvas" Height="120" Width="120" Background="AliceBlue"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

@@ -21,24 +21,34 @@ namespace Tetris
     {
         private void TetrisEvent_FieldChanged(object sender, EventArgs e)
         {
-            TidyUpLandedList();
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                UpdateField();
+                //TidyUpLandedList();
 
-            currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
-            currentTetri.Paint();
-            foreach (var entry in LandedTetriMV)
-                entry.Paint();
+                currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
+                currentTetri.UpdateTetri();
+                //foreach (var entry in LandedTetriMV)
+                //    entry.UpdateTetri();
+            }));
         }
 
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)
         {
-            currentTetri.CoordTetri = tetrisField.LandedTetri[tetrisField.LandedTetri.Count - 1];
-            LandedTetriMV.Add(currentTetri);
-            MakeNewCurrent();
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                currentTetri.CoordTetri = tetrisField.LandedTetri[tetrisField.LandedTetri.Count - 1];
+                LandedTetriMV.Add(currentTetri);
+                MakeNewCurrent();
+            }));
         }
 
         private void Field_ShowNextTetri(object sender, EventArgs e)
         {
-            MakeNewNext();
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                MakeNewNext();
+            }));
         }
     }
 }

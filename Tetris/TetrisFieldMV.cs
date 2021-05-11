@@ -30,6 +30,8 @@ namespace Tetris
 
         private readonly List<TetriMV> LandedTetriMV = new List<TetriMV>();
 
+        private readonly List<TetriMV> LandedSquaresMV = new List<TetriMV>();
+
         public TetrisFieldMV(Canvas canvas, Canvas teasercanvas, TetrisField field, int squaresize)
         {
             TetrisCanvas = canvas;
@@ -44,7 +46,7 @@ namespace Tetris
 
         private void MakeNewCurrent()
         {
-            currentTetri = new TetriMV(TetrisCanvas, SquareSize)
+            currentTetri = new TetriMV(TetrisCanvas, SquareSize, 4)
             {
                 CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri)
             };
@@ -54,16 +56,57 @@ namespace Tetris
         {
             TeaserCanvas.Children.Clear();
 
-            nextTetri = new TetriMV(TeaserCanvas, SquareSize)
+            nextTetri = new TetriMV(TeaserCanvas, SquareSize, 4)
             {
                 CoordTetri = new CoordListingTetri(tetrisField.NextTetri)
             };
 
-            nextTetri.Paint();
+            nextTetri.UpdateTetri();
+        }
+
+        private void SyncLandedList()
+        {
+            int actualSquareCount = tetrisField.GetLandedSquareCount();
+            int difference = actualSquareCount - LandedSquaresMV.Count;
+            if (difference == 0)
+                return;
+            if (difference > 0)
+            {
+                for (int i = 0; i < difference; i++)
+                {
+                    TetriMV nextTetri = new TetriMV(TetrisCanvas, SquareSize, 1);
+                    LandedSquaresMV.Add(nextTetri);
+                }
+            }
+            else if (difference < 0)
+            {
+                for (int i = 0; i < difference; i++)
+                {
+                    LandedSquaresMV[LandedSquaresMV.Count - 1].RemoveSquares(1);
+                    LandedSquaresMV.RemoveAt(LandedSquaresMV.Count - 1);
+                }
+            }
+        }
+
+        private void UpdateField()
+        {
+            SyncLandedList();
+
+            int i = 0;
+            foreach (var entry in tetrisField.LandedTetri)
+            {
+                for (int j = 0; j < entry.Listing.Length; j++)
+                {
+                    int x = entry.Listing[j].X;
+                    int y = entry.Listing[j].Y;
+                    TetriMV.UpdateSquare(LandedSquaresMV[i].RectangleTetri[0], x, y, LandedSquaresMV[i].SquareSize, LandedSquaresMV[i].TetriColor);
+                }
+            }
         }
 
         private void TidyUpLandedList()
         {
+            
             List<TetriMV> emptyEntry = new List<TetriMV>();
             foreach (var entry in LandedTetriMV)
             {
@@ -76,7 +119,7 @@ namespace Tetris
             }
         }
 
-        public void Start()
+        public void Init()
         {
             MakeNewCurrent();
             MakeNewNext();

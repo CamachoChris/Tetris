@@ -40,12 +40,19 @@ namespace Tetris
             tetrisField.Init();
 
             tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, tetrisField, SquareSize);
+            tetrisFieldMV.PauseText = PauseText;
+            PauseText.Visibility = Visibility.Hidden;
             tetrisFieldMV.Init();
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             tetrisField.Start();
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            tetrisField.Reset();
         }
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)

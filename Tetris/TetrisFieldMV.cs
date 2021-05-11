@@ -28,6 +28,8 @@ namespace Tetris
         private TetriMV currentTetri;
         private TetriMV nextTetri;
 
+        public TextBlock PauseText;
+
         private readonly List<SquareMV> LandedSquaresMV = new List<SquareMV>();
 
         public TetrisFieldMV(Canvas canvas, Canvas teasercanvas, TetrisField field, int squaresize)
@@ -40,6 +42,9 @@ namespace Tetris
             field.TetriMoved += Field_TetriMoved;
             field.TetriLanded += TetrisEvent_TetriLanded;
             field.TetriGameOver += Field_TetriGameOver;
+            field.TetriGameReset += Field_TetriGameReset;
+            field.TetriGamePaused += Field_TetriGamePaused;
+            field.TetriGameUnpaused += Field_TetriGameUnpaused;
         }
 
         private void MakeNewCurrent()
@@ -114,6 +119,34 @@ namespace Tetris
         {
             MakeNewCurrent();
             MakeNewNext();
+        }
+
+        private void AllElementsToNormalMode()
+        {
+            PauseText.Visibility = Visibility.Hidden;
+
+            foreach (var entry in LandedSquaresMV)
+                entry.ChangeVisibility(Visibility.Visible);
+
+            foreach (var entry in currentTetri.SquaresTetri)
+                entry.ChangeVisibility(Visibility.Visible);
+
+            foreach (var entry in nextTetri.SquaresTetri)
+                entry.ChangeVisibility(Visibility.Visible);
+        }
+
+        private void AllElementsInPauseMode()
+        {
+            PauseText.Visibility = Visibility.Visible;
+
+            foreach (var entry in LandedSquaresMV)
+                entry.ChangeVisibility(Visibility.Hidden);
+
+            foreach (var entry in currentTetri.SquaresTetri)
+                entry.ChangeVisibility(Visibility.Hidden);
+
+            foreach (var entry in nextTetri.SquaresTetri)
+                entry.ChangeVisibility(Visibility.Hidden);
         }
 
         public void MoveLeft()

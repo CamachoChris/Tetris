@@ -16,8 +16,12 @@ namespace TetrisModel
         public event EventHandler TetriMoved;
         public event EventHandler TetriLanded;
         public event EventHandler TetriGameOver;
+        public event EventHandler TetriGamePaused;
+        public event EventHandler TetriGameUnpaused;
+        public event EventHandler TetriGameReset;
 
         private bool _gameRunning;
+        private bool _gameOver;
 
         readonly private System.Timers.Timer tick = new System.Timers.Timer(750);
 
@@ -44,15 +48,53 @@ namespace TetrisModel
 
             NextTetri = new MatrixTetri(0, 0);
             NextTetri.BeRandomStandardTetri();
+
+            LandedTetri.Clear();
+
+            _gameRunning = false;
+            _gameOver = false;
+
+            tick.Enabled = false;
+        }
+
+        public void Reset()
+        {
+            Init();
+
+            if (TetriGameReset != null)
+                TetriGameReset(null, EventArgs.Empty);
         }
 
         public void Start()
         {
-            tick.Enabled = true;
-            _gameRunning = true;
+            if (_gameOver)
+                return;
+
+            if (!_gameRunning)
+            {
+                tick.Enabled = true;
+                _gameRunning = true;
+            }
+            else
+            {
+                if (tick.Enabled == true)
+                {
+                    tick.Enabled = false;
+
+                    if (TetriGamePaused != null)
+                        TetriGamePaused(null, EventArgs.Empty);
+                }
+                else if (tick.Enabled == false)
+                {
+                    tick.Enabled = true;
+
+                    if (TetriGameUnpaused != null)
+                        TetriGameUnpaused(null, EventArgs.Empty);
+                }
+            }
         }
 
-        public void Stop()
+        public void GameOver()
         {
             _gameRunning = false;
             tick.Stop();

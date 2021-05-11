@@ -53,6 +53,11 @@ namespace Tetris
             _canvas.Children.Add(Square);
         }
 
+        public void ChangeVisibility(Visibility visibility)
+        {
+            Square.Visibility = visibility;
+        }
+
         public void RemoveSquare()
         {
             _canvas.Children.Remove(Square);

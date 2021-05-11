@@ -23,9 +23,12 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="150"/>
             </Grid.ColumnDefinitions>
-            <Canvas x:Name="PlayingCanvas" Height="540" Width="300" Background="AliceBlue"/>
+            <Canvas x:Name="PlayingCanvas" Height="540" Width="300" Background="AliceBlue">
+                <TextBlock x:Name="PauseText" Canvas.Left="28" Canvas.Top="177" Text="Game Paused" FontSize="30" TextAlignment="Center" Height="52" Width="245" FontWeight="Bold"/>
+            </Canvas>
             <StackPanel Grid.Column="1">
-                <Button x:Name="StartButton" Content="Start" Height="40" Width="40" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,30" Click="StartButton_Click" />
+                <Button x:Name="StartButton" Content="Start/Pause" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,30,0,10" Click="StartButton_Click" />
+                <Button x:Name="ResetButton" Content="Reset" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,10,0,30" Click="ResetButton_Click" />
                 <Canvas x:Name="TeaserCanvas" Height="120" Width="120" Background="AliceBlue"/>
             </StackPanel>
         </Grid>

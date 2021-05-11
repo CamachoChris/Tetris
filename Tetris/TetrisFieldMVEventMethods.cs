@@ -45,5 +45,23 @@ namespace Tetris
                 MessageBox.Show("Du hast leider verloren.");
             }));
         }
+
+        private void Field_TetriGameUnpaused(object sender, EventArgs e)
+        {
+            AllElementsToNormalMode();
+        }
+
+
+        private void Field_TetriGamePaused(object sender, EventArgs e)
+        {
+            AllElementsInPauseMode();
+        }
+
+        private void Field_TetriGameReset(object sender, EventArgs e)
+        {
+            AllElementsToNormalMode();
+            UpdateCurrentTetri();
+            UpdateField();
+        }
     }
 }

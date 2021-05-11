@@ -10,11 +10,12 @@ namespace TetrisModel
         private bool GameOverCheck(MatrixTetri matrixTetri, int positionX, int positionY)
         {
             bool gameOver = false;
+
             bool squareCollision = CollisionWithSquare(matrixTetri, positionX, positionY);
             var (_, _, minY, _) = matrixTetri.GetRange();
             if (squareCollision && (minY + positionY - 1) < 0)
                 gameOver = true;
-            Debug.WriteLine($"gameOver = {gameOver}, minY = {minY + positionY}");
+
             return gameOver;
         }
 

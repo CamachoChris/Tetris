@@ -14,7 +14,7 @@ namespace TetrisModel
             bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             if (gameOver)
             {
-                Stop();
+                GameOver();
 
                 if (TetriGameOver != null)
                     TetriGameOver(null, EventArgs.Empty);

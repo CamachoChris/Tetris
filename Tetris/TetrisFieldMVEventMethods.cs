@@ -23,7 +23,7 @@ namespace Tetris
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
-                UpdateTetri();
+                UpdateCurrentTetri();
             }));
         }
 
@@ -31,7 +31,7 @@ namespace Tetris
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
-                UpdateTetri();
+                UpdateCurrentTetri();
                 MakeNewCurrent();
                 MakeNewNext();
                 UpdateField();

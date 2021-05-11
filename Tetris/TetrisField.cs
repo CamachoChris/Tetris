@@ -16,7 +16,7 @@ namespace TetrisModel
         public event EventHandler TetriMoved;
         public event EventHandler TetriLanded;
 
-        private System.Timers.Timer tick = new System.Timers.Timer(750);
+        readonly private System.Timers.Timer tick = new System.Timers.Timer(750);
 
         public List<CoordListingTetri> LandedTetri { get; private set; } = new List<CoordListingTetri>();
 

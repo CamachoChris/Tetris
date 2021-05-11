@@ -79,8 +79,7 @@ namespace Tetris
             {
                 for (int i = 0; i < Math.Abs(difference); i++)
                 {
-                    Debug.WriteLine("Remove square");
-                    LandedSquaresMV[LandedSquaresMV.Count - 1].RemoveSquare();
+                    LandedSquaresMV[^1].RemoveSquare();
                     LandedSquaresMV.RemoveAt(LandedSquaresMV.Count - 1);
                 }
             }
@@ -104,7 +103,7 @@ namespace Tetris
             }
         }
 
-        private void UpdateTetri()
+        private void UpdateCurrentTetri()
         {
             currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
             currentTetri.UpdateTetri();

@@ -20,14 +20,14 @@ namespace Tetris
 {
     class SquareMV
     {
-        public readonly int SquareSize;
+        private readonly int SquareSize;
+        private readonly Canvas _canvas;
 
-        public Rectangle Square;
+        private Rectangle Square;
+
         public int PositionX;
         public int PositionY;
         public Brush TetriColor;
-
-        private Canvas _canvas;
 
         public SquareMV() { }
 
@@ -36,10 +36,10 @@ namespace Tetris
             _canvas = canvas;
             SquareSize = squareSize;
 
-            AddSquare();
+            AddRectangle();
         }
 
-        private void AddSquare()
+        private void AddRectangle()
         {
             Square = new Rectangle()
             {

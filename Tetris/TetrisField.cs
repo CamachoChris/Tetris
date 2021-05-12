@@ -225,32 +225,45 @@ namespace TetrisModel
         private void TidyUpLandedList()
         {
             List<CoordListingTetri> emptyEntry = new List<CoordListingTetri>();
-            foreach(var entry in LandedTetri)
+            foreach (var entry in LandedTetri)
             {
                 if (entry.Listing.Count == 0)
                     emptyEntry.Add(entry);
             }
-            foreach(var entry in emptyEntry)
+            foreach (var entry in emptyEntry)
             {
                 LandedTetri.Remove(entry);
             }
 
-            // Moving down squares hanging in the air.
-            foreach(var entry in LandedTetri)
+            AddSplitTetriToLandedList();
+        }
+
+        private void AddSplitTetriToLandedList()
+        {
+            List<CoordListingTetri> splittetTetri = new List<CoordListingTetri>();
+            foreach (var entry in LandedTetri)
             {
-                CompressUpDown(entry);
+                CoordListingTetri tmp = GetSplitTetri(entry);
+                if (tmp != null)
+                    splittetTetri.Add(tmp);
+            }
+            foreach (var entry in splittetTetri)
+            {
+                LandedTetri.Add(entry);
             }
         }
 
-        public void CompressUpDown(CoordListingTetri tetri)
+        public CoordListingTetri GetSplitTetri(CoordListingTetri tetri)
         {
+            var (_, _, minY, maxY) = tetri.GetRange();
+            if (maxY - minY < 2)
+                return null;
+
             int count = 0;
             List<int> emptyLines = new List<int>();
 
-            var (_, _, minY, maxY) = tetri.GetRange();
-
             // Find empty lines.
-            for (int y = minY; y < maxY; y++)
+            for (int y = minY + 1; y < maxY; y++)
             {
                 for (int i = 0; i < tetri.Listing.Count; i++)
                 {
@@ -263,15 +276,24 @@ namespace TetrisModel
                 count = 0;
             }
 
-            // Move squares above empty lines 1 down.
-            foreach (var entry in emptyLines)
+            if (emptyLines.Count > 0)
             {
-                for (int i = 0; i < tetri.Listing.Count; i++)
+                CoordListingTetri newTetri = new CoordListingTetri();
+                newTetri.TetriType = tetri.TetriType;
+                foreach (var entry in tetri.Listing)
                 {
-                    if (tetri.Listing[i].Y < entry)
-                        tetri.Listing[i].Y++;
+                    if (entry.Y < emptyLines[0])
+                        newTetri.Listing.Add(entry);
                 }
+
+                foreach (var entry in newTetri.Listing)
+                {
+                    tetri.Listing.Remove(entry);
+                }
+                return newTetri;
             }
+            else
+                return null;
         }
 
         private void RemovedFinishedLine(int lineNumber)

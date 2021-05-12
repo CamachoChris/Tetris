@@ -74,23 +74,23 @@ namespace Tetris
             {
                 case Key.NumPad5:
                 case Key.S:                    
-                    tetrisFieldMV.MoveDown();
+                    tetrisField.MoveDown();
                     break;
                 case Key.NumPad4:
                 case Key.A:
-                    tetrisFieldMV.MoveLeft();
+                    tetrisField.MoveLeft();
                     break;
                 case Key.NumPad6:
                 case Key.D:
-                    tetrisFieldMV.MoveRight();
+                    tetrisField.MoveRight();
                     break;
                 case Key.NumPad7:
                 case Key.Q:
-                    tetrisFieldMV.RotateLeft();
+                    tetrisField.RotateLeft();
                     break;
                 case Key.NumPad9:
                 case Key.E:
-                    tetrisFieldMV.RotateRight();
+                    tetrisField.RotateRight();
                     break;
             }
         }

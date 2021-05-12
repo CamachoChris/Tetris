@@ -51,13 +51,6 @@ namespace Tetris
             field.TetriGameLevelUp += Field_TetriGameLevelUp;
         }
 
-        private void Field_TetriGameLevelUp(object sender, EventArgs e)
-        {
-            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-            {
-                LevelText.Text = string.Format($"{(int)sender}");
-            }));
-        }
 
         private void MakeNewCurrent()
         {
@@ -159,31 +152,6 @@ namespace Tetris
 
             foreach (var entry in nextTetri.SquaresTetri)
                 entry.ChangeVisibility(Visibility.Hidden);
-        }
-
-        public void MoveLeft()
-        {
-            tetrisField.MoveLeft();
-        }
-
-        public void MoveRight()
-        {
-            tetrisField.MoveRight();
-        }
-
-        public void MoveDown()
-        {
-            tetrisField.MoveDown();
-        }
-
-        public void RotateLeft()
-        {
-            tetrisField.RotateLeft();
-        }
-
-        public void RotateRight()
-        {
-            tetrisField.RotateRight();
         }
     }
 }

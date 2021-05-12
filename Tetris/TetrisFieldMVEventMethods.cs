@@ -27,14 +27,6 @@ namespace Tetris
             }));
         }
 
-        private void Field_TetriFieldChanged(object sender, EventArgs e)
-        {
-            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-            {
-                UpdateField();
-            }));
-        }
-
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
@@ -46,11 +38,19 @@ namespace Tetris
             }));
         }
 
+        private void Field_TetriFieldChanged(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                UpdateField();
+            }));
+        }
+
         private void Field_TetriGameOver(object sender, EventArgs e)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
-                MessageBox.Show("Du hast leider verloren.");
+                MessageBox.Show("Game Over");
             }));
         }
 
@@ -70,6 +70,14 @@ namespace Tetris
             AllElementsToNormalMode();
             UpdateCurrentTetri();
             UpdateField();
+        }
+
+        private void Field_TetriGameLevelUp(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                LevelText.Text = string.Format($"{(int)sender}");
+            }));
         }
     }
 }

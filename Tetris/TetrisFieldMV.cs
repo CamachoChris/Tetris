@@ -103,7 +103,7 @@ namespace Tetris
             int i = 0;
             foreach (var entry in tetrisField.LandedTetri)
             {
-                for (int j = 0; j < entry.Listing.Length; j++)
+                for (int j = 0; j < entry.Listing.Count; j++)
                 {
                     LandedSquaresMV[i].PositionX = entry.Listing[j].X;
                     LandedSquaresMV[i].PositionY = entry.Listing[j].Y;

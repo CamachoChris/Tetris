@@ -58,7 +58,7 @@ namespace Tetris
 
         private void SyncTetriLength()
         {
-            if (_coordTetri.Listing.Length == SquaresTetri.Count)
+            if (_coordTetri.Listing.Count == SquaresTetri.Count)
                 return;
 
             if (SquaresTetri.Count > 0)
@@ -70,7 +70,7 @@ namespace Tetris
                 SquaresTetri.Clear();
             }
 
-            for (int i = 0; i < _coordTetri.Listing.Length; i++)
+            for (int i = 0; i < _coordTetri.Listing.Count; i++)
             {
                 SquareMV nextSquare = new SquareMV(_canvas, _squareSize);
                 SquaresTetri.Add(nextSquare);

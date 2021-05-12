@@ -39,10 +39,12 @@ namespace Tetris
             tetrisField = new TetrisField(FieldSizeX, FieldSizeY);
             tetrisField.Init();
 
-            tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, tetrisField, SquareSize);
-            tetrisFieldMV.LevelText = LevelText;
-            tetrisFieldMV.ScoreText = ScoreText;
-            tetrisFieldMV.PauseText = PauseText;
+            tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, tetrisField, SquareSize)
+            {
+                LevelText = LevelText,
+                ScoreText = ScoreText,
+                PauseText = PauseText
+            };
             PauseText.Visibility = Visibility.Hidden;
 
             tetrisFieldMV.Init();

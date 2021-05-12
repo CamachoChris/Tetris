@@ -155,7 +155,7 @@ namespace TetrisModel
             int count = 0;
             foreach(var entry in LandedTetri)
             {
-                count += entry.Listing.Length;
+                count += entry.Listing.Count;
             }
             return count;
         }
@@ -185,7 +185,7 @@ namespace TetrisModel
             bool[,] filledField = new bool[FieldSizeX, FieldSizeY];
             foreach(var entry in LandedTetri)
             {
-                for (int i = 0; i < entry.Listing.Length; i++)
+                for (int i = 0; i < entry.Listing.Count; i++)
                 {
                     filledField[entry.Listing[i].X, entry.Listing[i].Y] = true;
                 }
@@ -227,7 +227,7 @@ namespace TetrisModel
             List<CoordListingTetri> emptyEntry = new List<CoordListingTetri>();
             foreach(var entry in LandedTetri)
             {
-                if (entry.Listing.Length == 0)
+                if (entry.Listing.Count == 0)
                     emptyEntry.Add(entry);
             }
             foreach(var entry in emptyEntry)
@@ -247,7 +247,7 @@ namespace TetrisModel
             foreach(var entry in LandedTetri)
             {
                 int i = 0;
-                while (i < entry.Listing.Length)
+                while (i < entry.Listing.Count)
                 {
                     if (entry.Listing[i].Y == lineNumber)
                     {

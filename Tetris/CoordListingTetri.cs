@@ -8,33 +8,38 @@ namespace TetrisModel
     public class CoordListingTetri
     {
         public StandardTetriType TetriType;
-        public Coord[] Listing;
+        public List<Coord> Listing;
 
         public CoordListingTetri()
         {
-            Listing = new Coord[4];
+            Listing = new List<Coord>();
         }
 
-        public CoordListingTetri(MatrixTetri matrixTetri)
+        public CoordListingTetri(MatrixTetri matrixTetri) : this()
         {
-            Listing = new Coord[4];
             GetFromMatrix(matrixTetri, matrixTetri.PositionX, matrixTetri.PositionY);
         }
 
-        public CoordListingTetri(MatrixTetri matrixTetri, int positionX, int positionY)
+        public CoordListingTetri(MatrixTetri matrixTetri, int positionX, int positionY) : this()
         {
-            Listing = new Coord[4];
             GetFromMatrix(matrixTetri, positionX, positionY);
         }
 
         public CoordListingTetri GetCopy()
         {
-            CoordListingTetri copiedTetri = new CoordListingTetri();
-
-            copiedTetri.Listing = new Coord[this.Listing.Length];
-            for (int i = 0; i < this.Listing.Length; i++)
+            CoordListingTetri copiedTetri = new CoordListingTetri
             {
-                copiedTetri.Listing[i] = this.Listing[i];
+                Listing = new List<Coord>()
+            };
+
+            for (int i = 0; i < this.Listing.Count; i++)
+            {
+                Coord nextCoord = new Coord
+                {
+                    X = this.Listing[i].X,
+                    Y = this.Listing[i].Y
+                };
+                copiedTetri.Listing.Add(nextCoord);
             }
 
             copiedTetri.TetriType = this.TetriType;
@@ -44,7 +49,7 @@ namespace TetrisModel
 
         public void FallOne()
         {
-            for (int i = 0; i < Listing.Length; i++)
+            for (int i = 0; i < Listing.Count; i++)
             {
                 Listing[i].Y++;
             }
@@ -52,7 +57,6 @@ namespace TetrisModel
 
         public void GetFromMatrix(MatrixTetri matrixTetri, int positionX, int positionY)
         {
-            int count = 0;
             TetriType = matrixTetri.StandardType;
 
             for (int y = 0; y < 4; y++)
@@ -60,9 +64,12 @@ namespace TetrisModel
                 {
                     if (matrixTetri.Matrix[x, y] == true)
                     {
-                        Listing[count].X = x + positionX;
-                        Listing[count].Y = y + positionY;
-                        count++;
+                        Coord nextCoord = new Coord
+                        {
+                            X = x + positionX,
+                            Y = y + positionY
+                        };
+                        Listing.Add(nextCoord);
                     }                    
                 }
         }
@@ -77,12 +84,12 @@ namespace TetrisModel
             // Find empty lines.
             for (int y = minY; y < maxY; y++)
             {
-                for (int i = 0; i < Listing.Length; i++)
+                for (int i = 0; i < Listing.Count; i++)
                 {
                     if (y != Listing[i].Y)
                         count++;
 
-                    if (count == Listing.Length)
+                    if (count == Listing.Count)
                         emptyLines.Add(y);
                 }
                 count = 0;
@@ -91,7 +98,7 @@ namespace TetrisModel
             // Move squares above empty lines 1 down.
             foreach (var entry in emptyLines)
             {
-                for (int i = 0; i < Listing.Length; i++)
+                for (int i = 0; i < Listing.Count; i++)
                 {
                     if (Listing[i].Y < entry)
                         Listing[i].Y++;
@@ -101,14 +108,7 @@ namespace TetrisModel
 
         public void RemoveAt(int index)
         {
-            Coord[] shortenedListing = new Coord[Listing.Length - 1];
-            int ListingCount = 0;
-            for (int i = 0; i < Listing.Length; i++)
-            {
-                if (i != index)
-                    shortenedListing[ListingCount++] = Listing[i];
-            }
-            Listing = shortenedListing;
+            Listing.RemoveAt(index);
         }
 
         public (int minX, int maxX, int minY, int maxY) GetRange()
@@ -117,7 +117,7 @@ namespace TetrisModel
             int maxX = Listing[0].X;
             int minY = Listing[0].Y;
             int maxY = Listing[0].Y;
-            for (int i = 1; i < Listing.Length; i++)
+            for (int i = 1; i < Listing.Count; i++)
             {
                 if (Listing[i].X < minX) minX = Listing[i].X;
                 if (Listing[i].X > maxX) maxX = Listing[i].X;

@@ -59,8 +59,8 @@ namespace TetrisModel
             foreach (var entry in LandedTetri)
             {
                 if (entry != exceptTetri)
-                    for (int i = 0; i < coordTetri.Listing.Length; i++)
-                        for (int j = 0; j < entry.Listing.Length; j++)
+                    for (int i = 0; i < coordTetri.Listing.Count; i++)
+                        for (int j = 0; j < entry.Listing.Count; j++)
                             if (coordTetri.Listing[i].X == entry.Listing[j].X && coordTetri.Listing[i].Y == entry.Listing[j].Y)
                                 return true;
             }

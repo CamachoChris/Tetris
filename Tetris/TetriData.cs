@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TetrisModel
 {
-    public struct Coord
+    public class Coord
     {
         public int X;
         public int Y;

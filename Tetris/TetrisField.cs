@@ -238,7 +238,39 @@ namespace TetrisModel
             // Moving down squares hanging in the air.
             foreach(var entry in LandedTetri)
             {
-                entry.CompressUpDown();
+                CompressUpDown(entry);
+            }
+        }
+
+        public void CompressUpDown(CoordListingTetri tetri)
+        {
+            int count = 0;
+            List<int> emptyLines = new List<int>();
+
+            var (_, _, minY, maxY) = tetri.GetRange();
+
+            // Find empty lines.
+            for (int y = minY; y < maxY; y++)
+            {
+                for (int i = 0; i < tetri.Listing.Count; i++)
+                {
+                    if (y != tetri.Listing[i].Y)
+                        count++;
+
+                    if (count == tetri.Listing.Count)
+                        emptyLines.Add(y);
+                }
+                count = 0;
+            }
+
+            // Move squares above empty lines 1 down.
+            foreach (var entry in emptyLines)
+            {
+                for (int i = 0; i < tetri.Listing.Count; i++)
+                {
+                    if (tetri.Listing[i].Y < entry)
+                        tetri.Listing[i].Y++;
+                }
             }
         }
 

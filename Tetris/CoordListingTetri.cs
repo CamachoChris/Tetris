@@ -74,38 +74,6 @@ namespace TetrisModel
                 }
         }
 
-        public void CompressUpDown()
-        {
-            int count = 0;
-            List<int> emptyLines = new List<int>();
-
-            var (_, _, minY, maxY) = GetRange();
-
-            // Find empty lines.
-            for (int y = minY; y < maxY; y++)
-            {
-                for (int i = 0; i < Listing.Count; i++)
-                {
-                    if (y != Listing[i].Y)
-                        count++;
-
-                    if (count == Listing.Count)
-                        emptyLines.Add(y);
-                }
-                count = 0;
-            }
-
-            // Move squares above empty lines 1 down.
-            foreach (var entry in emptyLines)
-            {
-                for (int i = 0; i < Listing.Count; i++)
-                {
-                    if (Listing[i].Y < entry)
-                        Listing[i].Y++;
-                }
-            }
-        }
-
         public void RemoveAt(int index)
         {
             Listing.RemoveAt(index);

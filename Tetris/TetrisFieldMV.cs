@@ -49,8 +49,8 @@ namespace Tetris
             field.TetriGamePaused += Field_TetriGamePaused;
             field.TetriGameUnpaused += Field_TetriGameUnpaused;
             field.TetriGameLevelUp += Field_TetriGameLevelUp;
+            field.TetriGameScoreChange += Field_TetriGameScoreChange;
         }
-
 
         private void MakeNewCurrent()
         {

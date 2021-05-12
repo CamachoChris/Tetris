@@ -21,6 +21,7 @@ namespace TetrisModel
         public event EventHandler TetriGameUnpaused;
         public event EventHandler TetriGameReset;
         public event EventHandler TetriGameLevelUp;
+        public event EventHandler TetriGameScoreChange;
 
         private bool _gameRunning;
         private bool _gameOver;
@@ -28,6 +29,7 @@ namespace TetrisModel
         private int _gameSpeed;
         private int _finishedLines;
         private int _level;
+        private int _score;
 
         readonly private System.Timers.Timer tick;
 
@@ -63,6 +65,13 @@ namespace TetrisModel
 
             _gameSpeed = 600;
             _finishedLines = 0;
+            _level = 1;
+            _score = 0;
+
+            if (TetriGameLevelUp != null)
+                TetriGameLevelUp(_level, EventArgs.Empty);
+            if (TetriGameScoreChange != null)
+                TetriGameScoreChange(_score, EventArgs.Empty);
 
             tick.Interval = _gameSpeed;
             tick.Enabled = false;

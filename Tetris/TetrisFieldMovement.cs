@@ -44,7 +44,28 @@ namespace TetrisModel
                 //if (finishedLines > 0)
                 //    LetThemFall();
 
-                _finishedLines += SeekAndDestroyFinishedLines();
+                int currentFinishedLines = SeekAndDestroyFinishedLines();
+                if (currentFinishedLines > 0)
+                {
+                    switch (currentFinishedLines)
+                    {
+                        case 1:
+                            _score += 1;
+                            break;
+                        case 2:
+                            _score += 4;
+                            break;
+                        case 3:
+                            _score += 9;
+                            break;
+                        case 4:
+                            _score += 32;
+                            break;
+                    }
+                    TetriGameScoreChange(_score, EventArgs.Empty);
+                }
+
+                _finishedLines += currentFinishedLines;
                 if (_finishedLines/5+1 > _level)
                 {
                     _level = _finishedLines / 5 + 1;

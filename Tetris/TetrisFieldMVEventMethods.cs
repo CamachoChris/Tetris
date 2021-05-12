@@ -79,5 +79,13 @@ namespace Tetris
                 LevelText.Text = string.Format($"{(int)sender}");
             }));
         }
+
+        private void Field_TetriGameScoreChange(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                ScoreText.Text = string.Format($"{(int)sender}");
+            }));
+        }
     }
 }

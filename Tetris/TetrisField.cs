@@ -91,19 +91,34 @@ namespace TetrisModel
             {
                 if (tick.Enabled == true)
                 {
-                    tick.Enabled = false;
-
-                    if (TetriGamePaused != null)
-                        TetriGamePaused(null, EventArgs.Empty);
+                    PauseGame();
                 }
                 else if (tick.Enabled == false)
                 {
-                    tick.Enabled = true;
-
-                    if (TetriGameUnpaused != null)
-                        TetriGameUnpaused(null, EventArgs.Empty);
+                    UnpauseGame();
                 }
             }
+        }
+
+        public bool IsGameRunning()
+        {
+            return _gameRunning;
+        }
+
+        public void PauseGame()
+        {
+            tick.Enabled = false;
+
+            if (TetriGamePaused != null)
+                TetriGamePaused(null, EventArgs.Empty);
+        }
+
+        public void UnpauseGame()
+        {
+            tick.Enabled = true;
+
+            if (TetriGameUnpaused != null)
+                TetriGameUnpaused(null, EventArgs.Empty);
         }
 
         public void GameOver()

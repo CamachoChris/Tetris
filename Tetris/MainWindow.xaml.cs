@@ -97,10 +97,14 @@ namespace Tetris
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            tetrisField.Start();
+            if (tetrisField.IsGameRunning())
+                tetrisField.PauseGame();
+
             MessageBoxResult result = MessageBox.Show("Really quit?", "Warning", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.No)
+            {
                 e.Cancel = true;
+            }
         }
     }
 }

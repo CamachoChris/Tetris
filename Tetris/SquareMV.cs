@@ -36,10 +36,10 @@ namespace Tetris
             _canvas = canvas;
             SquareSize = squareSize;
 
-            AddRectangle();
+            AddRectangleToCanvas();
         }
 
-        private void AddRectangle()
+        private void AddRectangleToCanvas()
         {
             Square = new Rectangle()
             {
@@ -53,14 +53,15 @@ namespace Tetris
             _canvas.Children.Add(Square);
         }
 
+        public void RemoveSquareFromCanvas()
+        {
+            _canvas.Children.Remove(Square);
+            Square = null;
+        }
+
         public void ChangeVisibility(Visibility visibility)
         {
             Square.Visibility = visibility;
-        }
-
-        public void RemoveSquare()
-        {
-            _canvas.Children.Remove(Square);
         }
 
         public void UpdateSquare()

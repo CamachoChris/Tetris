@@ -61,7 +61,7 @@ namespace Tetris
 
         private void MakeNewCurrent()
         {
-            currentTetri = new TetriMV(TetrisCanvas, SquareSize, 4)
+            currentTetri = new TetriMV(TetrisCanvas, SquareSize)
             {
                 CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri)
             };
@@ -71,7 +71,7 @@ namespace Tetris
         {
             TeaserCanvas.Children.Clear();
 
-            nextTetri = new TetriMV(TeaserCanvas, SquareSize, 4)
+            nextTetri = new TetriMV(TeaserCanvas, SquareSize)
             {
                 CoordTetri = new CoordListingTetri(tetrisField.NextTetri)
             };
@@ -97,7 +97,7 @@ namespace Tetris
             {
                 for (int i = 0; i < Math.Abs(difference); i++)
                 {
-                    LandedSquaresMV[^1].RemoveSquare();
+                    LandedSquaresMV[^1].RemoveSquareFromCanvas();
                     LandedSquaresMV.RemoveAt(LandedSquaresMV.Count - 1);
                 }
             }

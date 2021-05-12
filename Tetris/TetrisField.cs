@@ -61,9 +61,8 @@ namespace TetrisModel
             _gameRunning = false;
             _gameOver = false;
 
-            _gameSpeed = 600; // 70 schnellstes Ende. 600 langsamster Anfang.
+            _gameSpeed = 600;
             _finishedLines = 0;
-            _level = 1;
 
             tick.Interval = _gameSpeed;
             tick.Enabled = false;
@@ -130,12 +129,16 @@ namespace TetrisModel
         public void SpeedUp()
         {
             if (_gameSpeed > 300)
-                _gameSpeed -= 20;
+                _gameSpeed -= 40;
             else if (_gameSpeed > 200)
+                _gameSpeed -= 20;
+            else if (_gameSpeed > 100)
                 _gameSpeed -= 10;
             else if (_gameSpeed > 70)
                 _gameSpeed -= 5;
-            Debug.WriteLine(_gameSpeed);
+
+            tick.Interval = _gameSpeed;
+            Debug.WriteLine(tick.Interval);
         }
 
         public int GetLandedSquareCount()

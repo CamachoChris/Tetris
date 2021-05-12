@@ -114,7 +114,7 @@ namespace Tetris
                 {
                     LandedSquaresMV[i].PositionX = entry.Listing[j].X;
                     LandedSquaresMV[i].PositionY = entry.Listing[j].Y;
-                    LandedSquaresMV[i].TetriColor = SquareMV.GetTetriColor(entry);
+                    LandedSquaresMV[i].SetTetriColor(entry);
                     LandedSquaresMV[i].UpdateSquare();
                     i++;
                 }

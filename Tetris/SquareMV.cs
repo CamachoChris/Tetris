@@ -27,7 +27,7 @@ namespace Tetris
 
         public int PositionX;
         public int PositionY;
-        public Brush TetriColor;
+        private Brush _tetriColor;
 
         public SquareMV() { }
 
@@ -66,13 +66,13 @@ namespace Tetris
         public void UpdateSquare()
         {
             if (PositionY >= 0)
-                Square.Fill = TetriColor;
+                Square.Fill = _tetriColor;
             else
                 Square.Fill = Brushes.Transparent;
             Square.Margin = new Thickness(PositionX * SquareSize, PositionY * SquareSize, 0, 0);
         }
 
-        public static Brush GetTetriColor(CoordListingTetri tetri)
+        public void SetTetriColor(CoordListingTetri tetri)
         {
             Brush ColorI = Brushes.Gold;
             Brush ColorO = Brushes.DarkRed;
@@ -82,32 +82,30 @@ namespace Tetris
             Brush ColorZ = Brushes.DarkOrchid;
             Brush ColorT = Brushes.MediumTurquoise;
 
-            Brush color = Brushes.Transparent;
             switch (tetri.TetriType)
             {
                 case StandardTetriType.I:
-                    color = ColorI;
+                    _tetriColor = ColorI;
                     break;
                 case StandardTetriType.O:
-                    color = ColorO;
+                    _tetriColor = ColorO;
                     break;
                 case StandardTetriType.L:
-                    color = ColorL;
+                    _tetriColor = ColorL;
                     break;
                 case StandardTetriType.J:
-                    color = ColorJ;
+                    _tetriColor = ColorJ;
                     break;
                 case StandardTetriType.S:
-                    color = ColorS;
+                    _tetriColor = ColorS;
                     break;
                 case StandardTetriType.Z:
-                    color = ColorZ;
+                    _tetriColor = ColorZ;
                     break;
                 case StandardTetriType.T:
-                    color = ColorT;
+                    _tetriColor = ColorT;
                     break;
             };
-            return color;
         }
     }
 }

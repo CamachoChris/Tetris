@@ -31,7 +31,7 @@ namespace Tetris
                 _coordTetri = value;
                 foreach (var entry in SquaresTetri)
                 {
-                    entry.TetriColor = SquareMV.GetTetriColor(value);
+                    entry.SetTetriColor(value);
                 }
             }
         }

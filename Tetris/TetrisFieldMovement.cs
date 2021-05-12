@@ -7,11 +7,43 @@ namespace TetrisModel
 {
     public partial class TetrisField
     {
+        private void LineFinishCheck()
+        {
+            int currentFinishedLines = SeekAndDestroyFinishedLines();
+            if (currentFinishedLines > 0)
+            {
+                switch (currentFinishedLines)
+                {
+                    case 1:
+                        _score += 1;
+                        break;
+                    case 2:
+                        _score += 4;
+                        break;
+                    case 3:
+                        _score += 9;
+                        break;
+                    case 4:
+                        _score += 32;
+                        break;
+                }
+                TetriGameScoreChange(_score, EventArgs.Empty);
+
+                _finishedLinesCount += currentFinishedLines;
+                if (_finishedLinesCount / 5 + 1 > _level)
+                {
+                    _level = _finishedLinesCount / 5 + 1;
+                    SpeedUp();
+                    TetriGameLevelUp(_level, EventArgs.Empty);
+                }
+            }
+        }
+
         public void MoveDown()
         {
             if (!_gameRunning) return;
 
-            _finishedLines += SeekAndDestroyFinishedLines();
+            LineFinishCheck();
             if (LetThemFall() && TetriFieldChanged != null)
                 TetriFieldChanged(null, EventArgs.Empty);
 
@@ -40,38 +72,7 @@ namespace TetrisModel
                 LandedTetri.Add(new CoordListingTetri(CurrentTetri));
 
                 PrepareForNextTetri();
-
-                //if (finishedLines > 0)
-                //    LetThemFall();
-
-                int currentFinishedLines = SeekAndDestroyFinishedLines();
-                if (currentFinishedLines > 0)
-                {
-                    switch (currentFinishedLines)
-                    {
-                        case 1:
-                            _score += 1;
-                            break;
-                        case 2:
-                            _score += 4;
-                            break;
-                        case 3:
-                            _score += 9;
-                            break;
-                        case 4:
-                            _score += 32;
-                            break;
-                    }
-                    TetriGameScoreChange(_score, EventArgs.Empty);
-                }
-
-                _finishedLines += currentFinishedLines;
-                if (_finishedLines/5+1 > _level)
-                {
-                    _level = _finishedLines / 5 + 1;
-                    SpeedUp();
-                    TetriGameLevelUp(_level, EventArgs.Empty);
-                }
+                LineFinishCheck();
 
                 if (TetriLanded != null)
                     TetriLanded(null, EventArgs.Empty);

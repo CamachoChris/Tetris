@@ -11,11 +11,10 @@ namespace TetrisModel
     }
     public enum StandardTetriType
     {
-        I, O, L, J, S, Z
+        I, O, L, J, S, Z, T
     }
     public partial class MatrixTetri
     {
-
         private readonly Coord[] I = {
             new Coord() { X = 2, Y = 0 },
             new Coord() { X = 2, Y = 1 },
@@ -51,6 +50,12 @@ namespace TetrisModel
             new Coord() { X = 1, Y = 1 },
             new Coord() { X = 1, Y = 2 },
             new Coord() { X = 2, Y = 2 },
+        };
+        private readonly Coord[] T = {
+            new Coord() { X = 2, Y = 1 },
+            new Coord() { X = 1, Y = 2 },
+            new Coord() { X = 2, Y = 2 },
+            new Coord() { X = 3, Y = 2 },
         };
     }
 }

@@ -65,16 +65,11 @@ namespace Tetris
 
         public void UpdateSquare()
         {
-            UpdateSquare(Square, PositionX, PositionY, SquareSize, TetriColor);
-        }
-
-        public static void UpdateSquare(Rectangle square, int x, int y, int squareSize, Brush color)
-        {
-            if (y >= 0)
-                square.Fill = color;
+            if (PositionY >= 0)
+                Square.Fill = TetriColor;
             else
-                square.Fill = Brushes.Transparent;
-            square.Margin = new Thickness(x * squareSize, y * squareSize, 0, 0);
+                Square.Fill = Brushes.Transparent;
+            Square.Margin = new Thickness(PositionX * SquareSize, PositionY * SquareSize, 0, 0);
         }
 
         public static Brush GetTetriColor(CoordListingTetri tetri)
@@ -85,6 +80,7 @@ namespace Tetris
             Brush ColorJ = Brushes.CornflowerBlue;
             Brush ColorS = Brushes.Crimson;
             Brush ColorZ = Brushes.DarkOrchid;
+            Brush ColorT = Brushes.MediumTurquoise;
 
             Brush color = Brushes.Transparent;
             switch (tetri.TetriType)
@@ -106,6 +102,9 @@ namespace Tetris
                     break;
                 case StandardTetriType.Z:
                     color = ColorZ;
+                    break;
+                case StandardTetriType.T:
+                    color = ColorT;
                     break;
             };
             return color;

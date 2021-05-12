@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris"
         mc:Ignorable="d"
-        Title="Tetris" Height="620" Width="520" Background="LightSkyBlue" KeyDown="Window_KeyDown">
+        Title="Tetris" Height="620" Width="520" Background="LightSkyBlue" KeyDown="Window_KeyDown" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -27,9 +27,14 @@
                 <TextBlock x:Name="PauseText" Canvas.Left="28" Canvas.Top="177" Text="Game Paused" FontSize="30" TextAlignment="Center" Height="52" Width="245" FontWeight="Bold"/>
             </Canvas>
             <StackPanel Grid.Column="1">
-                <Button x:Name="StartButton" Content="Start/Pause" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,30,0,10" Click="StartButton_Click" />
-                <Button x:Name="ResetButton" Content="Reset" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,10,0,30" Click="ResetButton_Click" />
+                <TextBlock Text="Level:" Margin="0,30,0,0" TextAlignment="Center" />
+                <TextBlock x:Name="LevelText" Text="1" Margin="0,0,0,0" TextAlignment="Center" FontWeight="Bold" FontSize="20" />
+                <TextBlock Text="Score:" Margin="0,20,0,0" TextAlignment="Center" />
+                <TextBlock x:Name="ScoreText" Text="123456789" Margin="0,0,0,40" TextAlignment="Center" FontWeight="Bold" FontSize="20" />
+
                 <Canvas x:Name="TeaserCanvas" Height="120" Width="120" Background="AliceBlue"/>
+                <Button x:Name="StartButton" Content="Start/Pause" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,90,0,10" Click="StartButton_Click" />
+                <Button x:Name="ResetButton" Content="Reset" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,10,0,30" Click="ResetButton_Click" />
             </StackPanel>
         </Grid>
     </Grid>

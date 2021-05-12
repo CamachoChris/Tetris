@@ -11,6 +11,10 @@ namespace TetrisModel
         {
             if (!_gameRunning) return;
 
+            _finishedLines += SeekAndDestroyFinishedLines();
+            if (LetThemFall() && TetriFieldChanged != null)
+                TetriFieldChanged(null, EventArgs.Empty);
+
             bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             if (gameOver)
             {
@@ -37,9 +41,16 @@ namespace TetrisModel
 
                 PrepareForNextTetri();
 
-                int finishedLines = SeekAndDestroyFinishedLines();
-                if (finishedLines > 0)
-                    LetThemFall();
+                //if (finishedLines > 0)
+                //    LetThemFall();
+
+                _finishedLines += SeekAndDestroyFinishedLines();
+                if (_finishedLines/5+1 > _level)
+                {
+                    _level = _finishedLines / 5 + 1;
+                    SpeedUp();
+                    TetriGameLevelUp(_level, EventArgs.Empty);
+                }
 
                 if (TetriLanded != null)
                     TetriLanded(null, EventArgs.Empty);

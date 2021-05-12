@@ -15,15 +15,21 @@ namespace TetrisModel
 
         public event EventHandler TetriMoved;
         public event EventHandler TetriLanded;
+        public event EventHandler TetriFieldChanged;
         public event EventHandler TetriGameOver;
         public event EventHandler TetriGamePaused;
         public event EventHandler TetriGameUnpaused;
         public event EventHandler TetriGameReset;
+        public event EventHandler TetriGameLevelUp;
 
         private bool _gameRunning;
         private bool _gameOver;
 
-        readonly private System.Timers.Timer tick = new System.Timers.Timer(750);
+        private int _gameSpeed;
+        private int _finishedLines;
+        private int _level;
+
+        readonly private System.Timers.Timer tick;
 
         public List<CoordListingTetri> LandedTetri { get; private set; } = new List<CoordListingTetri>();
 
@@ -32,6 +38,7 @@ namespace TetrisModel
             FieldSizeX = fieldSizeX;
             FieldSizeY = fieldSizeY;
 
+            tick = new System.Timers.Timer();
             tick.Elapsed += Tick_Elapsed;
         }
 
@@ -54,6 +61,11 @@ namespace TetrisModel
             _gameRunning = false;
             _gameOver = false;
 
+            _gameSpeed = 600; // 70 schnellstes Ende. 600 langsamster Anfang.
+            _finishedLines = 0;
+            _level = 1;
+
+            tick.Interval = _gameSpeed;
             tick.Enabled = false;
         }
 
@@ -98,6 +110,17 @@ namespace TetrisModel
         {
             _gameRunning = false;
             tick.Stop();
+        }
+
+        public void SpeedUp()
+        {
+            if (_gameSpeed > 300)
+                _gameSpeed -= 20;
+            else if (_gameSpeed > 200)
+                _gameSpeed -= 10;
+            else if (_gameSpeed > 70)
+                _gameSpeed -= 5;
+            Debug.WriteLine(_gameSpeed);
         }
 
         public int GetLandedSquareCount()
@@ -166,7 +189,7 @@ namespace TetrisModel
             if (finishedLineCount > 0)
             {
                 TidyUpLandedList();
-                SeekAndDestroyFinishedLines();
+                //SeekAndDestroyFinishedLines();
             }
 
             return finishedLineCount;
@@ -209,18 +232,19 @@ namespace TetrisModel
             }
         }
 
-        private void LetThemFall()
+        private bool LetThemFall()
         {
             bool couldFall;
-            do
-            {
+            //do
+            //{
                 couldFall = false;
                 foreach (var entry in LandedTetri)
                 {
                     if (FallingDown(entry) == true)
                         couldFall = true;
                 }
-            } while (couldFall);
+            //} while (couldFall);
+            return couldFall;
         }
 
         /// <summary>

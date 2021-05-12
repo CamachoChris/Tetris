@@ -29,6 +29,8 @@ namespace Tetris
         private TetriMV nextTetri;
 
         public TextBlock PauseText;
+        public TextBlock LevelText;
+        public TextBlock ScoreText;
 
         private readonly List<SquareMV> LandedSquaresMV = new List<SquareMV>();
 
@@ -41,10 +43,20 @@ namespace Tetris
 
             field.TetriMoved += Field_TetriMoved;
             field.TetriLanded += TetrisEvent_TetriLanded;
+            field.TetriFieldChanged += Field_TetriFieldChanged;
             field.TetriGameOver += Field_TetriGameOver;
             field.TetriGameReset += Field_TetriGameReset;
             field.TetriGamePaused += Field_TetriGamePaused;
             field.TetriGameUnpaused += Field_TetriGameUnpaused;
+            field.TetriGameLevelUp += Field_TetriGameLevelUp;
+        }
+
+        private void Field_TetriGameLevelUp(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                LevelText.Text = string.Format($"{(int)sender}");
+            }));
         }
 
         private void MakeNewCurrent()

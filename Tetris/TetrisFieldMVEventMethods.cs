@@ -27,6 +27,14 @@ namespace Tetris
             }));
         }
 
+        private void Field_TetriFieldChanged(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                UpdateField();
+            }));
+        }
+
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>

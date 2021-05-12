@@ -40,8 +40,11 @@ namespace Tetris
             tetrisField.Init();
 
             tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, tetrisField, SquareSize);
+            tetrisFieldMV.LevelText = LevelText;
+            tetrisFieldMV.ScoreText = ScoreText;
             tetrisFieldMV.PauseText = PauseText;
             PauseText.Visibility = Visibility.Hidden;
+
             tetrisFieldMV.Init();
         }
 
@@ -90,6 +93,14 @@ namespace Tetris
                     tetrisFieldMV.RotateRight();
                     break;
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            tetrisField.Start();
+            MessageBoxResult result = MessageBox.Show("Really quit?", "Warning", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.No)
+                e.Cancel = true;
         }
     }
 }

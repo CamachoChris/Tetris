@@ -42,7 +42,7 @@ namespace TetrisModel
         public void BeRandomStandardTetri()
         {
             Random rnd = new Random();
-            int standardTetriPosition = rnd.Next(6);
+            int standardTetriPosition = rnd.Next(7);
             CreateStandardTetri((StandardTetriType)standardTetriPosition);
 
             int rndRotate = rnd.Next(4);
@@ -108,6 +108,10 @@ namespace TetrisModel
                 case StandardTetriType.Z:
                     SetFromCoordArray(Z);
                     StandardType = StandardTetriType.Z;
+                    break;
+                case StandardTetriType.T:
+                    SetFromCoordArray(T);
+                    StandardType = StandardTetriType.T;
                     break;
             }
         }

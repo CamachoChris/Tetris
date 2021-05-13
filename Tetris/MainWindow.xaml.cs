@@ -22,7 +22,7 @@ namespace Tetris
     public partial class MainWindow : Window
     {
         const string AppName = "Tetris";
-        const string Version = "0.0.0";
+        const string Version = "0.1.0";
         const string Developer = "Grimakar";
         const string TimeOfDevelopment = "May 2021";
 

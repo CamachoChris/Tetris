@@ -7,7 +7,11 @@ namespace TetrisModel
 {
     public partial class TetrisField
     {
-        private void LineFinishCheck()
+        /// <summary>
+        /// Does the whole work around finished lines
+        /// </summary>
+        /// <returns>Returns the amount of found finished lines</returns>
+        private int LineFinishCheck()
         {
             int currentFinishedLines = SeekAndDestroyFinishedLines();
             if (currentFinishedLines > 0)
@@ -37,16 +41,21 @@ namespace TetrisModel
                     TetriGameLevelUp(_level, EventArgs.Empty);
                 }
             }
+            return currentFinishedLines;
         }
 
         public void MovingField()
         {
             if (!_gameRunning) return;
 
-            if (LetThemFall() && TetriFieldChanged != null)
-                TetriFieldChanged(null, EventArgs.Empty);
+            bool couldAnyFall = LetThemFall();
+            int finishedLineCount = LineFinishCheck();
 
-            LineFinishCheck();
+            if (couldAnyFall || finishedLineCount > 0)
+            {
+                if (TetriFieldChanged != null)
+                    TetriFieldChanged(null, EventArgs.Empty);
+            }
         }
 
         public void MoveDown()
@@ -55,6 +64,7 @@ namespace TetrisModel
 
             if (IsAnyFalling())
                 return;
+
             bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             if (gameOver)
             {

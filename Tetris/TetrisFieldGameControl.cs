@@ -99,7 +99,8 @@ namespace TetrisModel
 
         private void Tick_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            //MoveDown();
+            MovingField();
+            MoveDown();
         }
 
         private void GameOver()

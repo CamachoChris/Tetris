@@ -39,7 +39,7 @@ namespace TetrisModel
             }
         }
 
-        public void MoveDown()
+        public void MovingField()
         {
             if (!_gameRunning) return;
 
@@ -47,7 +47,14 @@ namespace TetrisModel
                 TetriFieldChanged(null, EventArgs.Empty);
 
             LineFinishCheck();
+        }
 
+        public void MoveDown()
+        {
+            if (!_gameRunning) return;
+
+            if (IsAnyFalling())
+                return;
             bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             if (gameOver)
             {

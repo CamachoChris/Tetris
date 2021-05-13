@@ -9,6 +9,7 @@ namespace TetrisModel
     {
         public StandardTetriType TetriType;
         public List<Coord> Listing;
+        public bool IsFalling;
 
         public CoordListingTetri()
         {

@@ -45,6 +45,14 @@ namespace TetrisModel
             tick.Elapsed += Tick_Elapsed;
         }
 
+        private bool IsAnyFalling()
+        {
+            if (_finishedLinesList.Count > 0)
+                return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Fills a 2D-Array analogous to the field with the tetris. True = there is one.
         /// </summary>

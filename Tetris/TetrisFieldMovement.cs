@@ -48,10 +48,7 @@ namespace TetrisModel
         {
             if (!_gameRunning) return;
 
-            bool couldAnyFall = LetThemFall();
-            int finishedLineCount = LineFinishCheck();
-
-            if (couldAnyFall || finishedLineCount > 0)
+            if (LetThemFall() || LineFinishCheck() > 0)
             {
                 if (TetriFieldChanged != null)
                     TetriFieldChanged(null, EventArgs.Empty);

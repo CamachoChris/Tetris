@@ -58,6 +58,8 @@ namespace Tetris
             {
                 CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri)
             };
+
+            currentTetri.UpdateTetri();
         }
 
         private void MakeNewNext()
@@ -70,6 +72,12 @@ namespace Tetris
             };
 
             nextTetri.UpdateTetri();
+        }
+
+        private void UpdateCurrentTetri()
+        {
+            currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
+            currentTetri.UpdateTetri();
         }
 
         private void SyncLandedList()
@@ -112,12 +120,6 @@ namespace Tetris
                     i++;
                 }
             }
-        }
-
-        private void UpdateCurrentTetri()
-        {
-            currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
-            currentTetri.UpdateTetri();
         }
 
         public void Init()

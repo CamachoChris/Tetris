@@ -31,7 +31,7 @@ namespace TetrisModel
         private int _level;
         private int _score;
 
-        readonly private System.Timers.Timer tick;
+        readonly private System.Timers.Timer tick = new System.Timers.Timer();
 
         public List<CoordListingTetri> LandedTetri { get; private set; } = new List<CoordListingTetri>();
         private List<int> _finishedLinesList = new List<int>();
@@ -41,237 +41,140 @@ namespace TetrisModel
             FieldSizeX = fieldSizeX;
             FieldSizeY = fieldSizeY;
 
-            tick = new System.Timers.Timer();
             tick.Elapsed += Tick_Elapsed;
         }
 
-        private bool IsAnyFalling()
+        public void Init()
         {
-            if (_finishedLinesList.Count > 0)
-                return true;
+            CurrentTetri = new MatrixTetri();
+            CurrentTetri.BeRandomStandardTetri();
+            SetStartPosition(CurrentTetri);
 
-            foreach (var entry in LandedTetri)
-            {
-                if (entry.IsFalling)
-                    return true;
-            }
+            NextTetri = new MatrixTetri(0, 0);
+            NextTetri.BeRandomStandardTetri();
 
-            return false;
+            LandedTetri.Clear();
+
+            _gameRunning = false;
+            _gameOver = false;
+
+            _gameSpeed = 600;
+            _finishedLinesCount = 0;
+            _level = 1;
+            _score = 0;
+
+            if (TetriGameLevelUp != null)
+                TetriGameLevelUp(_level, EventArgs.Empty);
+            if (TetriGameScoreChange != null)
+                TetriGameScoreChange(_score, EventArgs.Empty);
+
+            tick.Interval = _gameSpeed;
+            tick.Enabled = false;
         }
 
-        /// <summary>
-        /// Fills a 2D-Array analogous to the field with the tetris. True = there is one.
-        /// </summary>
-        /// <returns></returns>
-        private bool[,] ReturnFilledField()
+        public void Reset()
         {
-            bool[,] filledField = new bool[FieldSizeX, FieldSizeY];
-            foreach(var entry in LandedTetri)
-            {
-                for (int i = 0; i < entry.Listing.Count; i++)
-                {
-                    if (!entry.IsFalling)
-                        filledField[entry.Listing[i].X, entry.Listing[i].Y] = true;
-                }
-            }
-            return filledField;
+            Init();
+
+            if (TetriGameReset != null)
+                TetriGameReset(null, EventArgs.Empty);
         }
 
-        private int SeekAndDestroyFinishedLines()
+        public void Start()
         {
-            int finishedLineCount = 0;
-            bool[,] filledField = ReturnFilledField();
+            if (_gameOver)
+                return;
 
-            for (int y = 0; y < FieldSizeY; y++)
+            if (!_gameRunning)
             {
-                for (int x = 0; x < FieldSizeX; x++)
-                {
-                    if (filledField[x, y] == false)
-                    {
-                        break;
-                    }
-                    if (x == FieldSizeX - 1)
-                    {
-                        _finishedLinesList.Add(y);
-                        RemoveSquaresInFinishedLine(y);
-                        finishedLineCount++;
-                    }
-                }
-            }
-            if (finishedLineCount > 0)
-            {
-                TidyUpLandedList();
-                AddSplitTetriToLandedList();
-            }
-
-            return finishedLineCount;
-        }
-
-        /// <summary>
-        /// Removes all entries in LandedTetri with 0 squares left.
-        /// </summary>
-        private void TidyUpLandedList()
-        {
-            List<CoordListingTetri> emptyEntry = new List<CoordListingTetri>();
-            foreach (var entry in LandedTetri)
-            {
-                if (entry.Listing.Count == 0)
-                    emptyEntry.Add(entry);
-            }
-            foreach (var entry in emptyEntry)
-            {
-                LandedTetri.Remove(entry);
-            }
-        }
-
-        private void RemoveSquaresInFinishedLine(int lineNumber)
-        {
-            foreach(var entry in LandedTetri)
-            {
-                int i = 0;
-                while (i < entry.Listing.Count)
-                {
-                    if (entry.Listing[i].Y == lineNumber)
-                    {
-                        entry.RemoveAt(i);
-                        i--;
-                    }
-                    i++;
-                };
-            }
-        }
-
-        /// <summary>
-        /// Lets the tetri in the LandedTetri List fall.
-        /// </summary>
-        /// <returns>return true, if any could fall</returns>
-        private bool LetThemFall()
-        {
-            bool couldFall = false;
-            int lowestRow = -1;
-
-            if (_finishedLinesList.Count > 0)
-                lowestRow = _finishedLinesList[^1];
-
-            if (lowestRow > -1)
-            {
-                foreach(var entry in LandedTetri)
-                {
-                    var (_, _, minY, maxY) = entry.GetRange();
-                    if (maxY < lowestRow)
-                    {
-                        entry.FallOne();
-                        couldFall = true;
-                    }
-                    if (minY > lowestRow)
-                    {
-                        if (FallingDown(entry) == true)
-                            couldFall = true;
-                    }
-                }
-                _finishedLinesList.RemoveAt(_finishedLinesList.Count - 1);
-                if (_finishedLinesList.Count > 0)
-                {
-                    for (int i = 0; i < _finishedLinesList.Count; i++)
-                    {
-                        _finishedLinesList[i]++;
-                    }                
-                }
+                tick.Enabled = true;
+                _gameRunning = true;
             }
             else
             {
-                foreach(var entry in LandedTetri)
-                    if (FallingDown(entry) == true)
-                        couldFall = true;
-            }
-
-            return couldFall;
-        }
-
-        /// <summary>
-        /// Checks if falling is possible and lets the Tetris fall.
-        /// </summary>
-        /// <param name="landedTetri"></param>
-        /// <returns>true if could fall, false if not</returns>
-        private bool FallingDown(CoordListingTetri landedTetri)
-        {
-            CoordListingTetri copiedTetri = landedTetri.GetCopy();
-            copiedTetri.FallOne();
-
-            bool borderCollision = CollisionWithBorder(copiedTetri);
-            bool squareCollision = CollisionWithSquare(copiedTetri, landedTetri);
-
-            if (!borderCollision && !squareCollision)
-            {
-                landedTetri.IsFalling = true;
-                landedTetri.FallOne();
-                return true;
-            }
-            else
-            {
-                landedTetri.IsFalling = false;
-                return false;
+                if (tick.Enabled == true)
+                {
+                    PauseGame();
+                }
+                else if (tick.Enabled == false)
+                {
+                    UnpauseGame();
+                }
             }
         }
 
-        private void AddSplitTetriToLandedList()
+        public bool IsGameRunning()
         {
-            List<CoordListingTetri> splittetTetri = new List<CoordListingTetri>();
-            foreach (var entry in LandedTetri)
-            {
-                CoordListingTetri tmp = GetSplitTetri(entry);
-                if (tmp != null)
-                    splittetTetri.Add(tmp);
-            }
-            foreach (var entry in splittetTetri)
-            {
-                LandedTetri.Add(entry);
-            }
+            return _gameRunning;
         }
 
-        private CoordListingTetri GetSplitTetri(CoordListingTetri tetri)
+        public void PauseGame()
         {
-            var (_, _, minY, maxY) = tetri.GetRange();
-            if (maxY - minY < 2)
-                return null;
+            tick.Enabled = false;
 
+            if (TetriGamePaused != null)
+                TetriGamePaused(null, EventArgs.Empty);
+        }
+
+        public void UnpauseGame()
+        {
+            tick.Enabled = true;
+
+            if (TetriGameUnpaused != null)
+                TetriGameUnpaused(null, EventArgs.Empty);
+        }
+
+        public int GetLandedSquareCount()
+        {
             int count = 0;
-            List<int> emptyLines = new List<int>();
-
-            // Find empty lines.
-            for (int y = minY + 1; y < maxY; y++)
+            foreach (var entry in LandedTetri)
             {
-                for (int i = 0; i < tetri.Listing.Count; i++)
-                {
-                    if (y != tetri.Listing[i].Y)
-                        count++;
-
-                    if (count == tetri.Listing.Count)
-                        emptyLines.Add(y);
-                }
-                count = 0;
+                count += entry.Listing.Count;
             }
+            return count;
+        }
 
-            if (emptyLines.Count > 0)
-            {
-                // Fill new Tetri with upper half of divided Tetri
-                CoordListingTetri newTetri = new CoordListingTetri();
-                newTetri.TetriType = tetri.TetriType;
-                foreach (var entry in tetri.Listing)
-                {
-                    if (entry.Y < emptyLines[0])
-                        newTetri.Listing.Add(entry);
-                }
+        private void Tick_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            MovingField();
+            MoveDown();
+        }
 
-                // Remove squares moved to new Tetri
-                foreach (var entry in newTetri.Listing)
-                {
-                    tetri.Listing.Remove(entry);
-                }
-                return newTetri;
-            }
-            else
-                return null;
+        private void GameOver()
+        {
+            _gameRunning = false;
+            tick.Stop();
+        }
+
+        private void SpeedUp()
+        {
+            if (_gameSpeed > 300)
+                _gameSpeed -= 40;
+            else if (_gameSpeed > 200)
+                _gameSpeed -= 20;
+            else if (_gameSpeed > 100)
+                _gameSpeed -= 10;
+            else if (_gameSpeed > 70)
+                _gameSpeed -= 5;
+
+            tick.Interval = _gameSpeed;
+            Debug.WriteLine(tick.Interval);
+        }
+
+        private void PrepareForNextTetri()
+        {
+            CurrentTetri = NextTetri;
+            SetStartPosition(CurrentTetri);
+
+            NextTetri = new MatrixTetri(0, 0);
+            NextTetri.BeRandomStandardTetri();
+        }
+
+        private void SetStartPosition(MatrixTetri matrixTetri)
+        {
+            var (_, _, _, maxY) = matrixTetri.GetRange();
+            matrixTetri.PositionX = FieldSizeX / 2 - 2;
+            matrixTetri.PositionY = -1 - maxY;
         }
     }
 }

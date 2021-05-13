@@ -102,7 +102,7 @@ namespace Tetris
             if (tetrisField.IsGameRunning())
                 tetrisField.PauseGame();
 
-            MessageBoxResult result = MessageBox.Show("Really quit?", "Warning", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Really quit?", "Quit?", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.No)
             {
                 e.Cancel = true;

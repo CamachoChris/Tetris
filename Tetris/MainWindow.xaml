@@ -28,9 +28,9 @@
             </Canvas>
             <StackPanel Grid.Column="1">
                 <TextBlock Text="Level:" Margin="0,30,0,0" TextAlignment="Center" />
-                <TextBlock x:Name="LevelText" Text="1" Margin="0,0,0,0" TextAlignment="Center" FontWeight="Bold" FontSize="20" />
+                <TextBlock x:Name="LevelText" Text="" Margin="0,0,0,0" TextAlignment="Center" FontWeight="Bold" FontSize="20" />
                 <TextBlock Text="Score:" Margin="0,20,0,0" TextAlignment="Center" />
-                <TextBlock x:Name="ScoreText" Text="0" Margin="0,0,0,40" TextAlignment="Center" FontWeight="Bold" FontSize="20" />
+                <TextBlock x:Name="ScoreText" Text="" Margin="0,0,0,40" TextAlignment="Center" FontWeight="Bold" FontSize="20" />
 
                 <Canvas x:Name="TeaserCanvas" Height="120" Width="120" Background="AliceBlue"/>
                 <Button x:Name="StartButton" Content="Start/Pause" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,90,0,10" Click="StartButton_Click" />

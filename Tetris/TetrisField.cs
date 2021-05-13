@@ -129,11 +129,34 @@ namespace TetrisModel
         private bool LetThemFall()
         {
             bool couldFall = false;
-            foreach (var entry in LandedTetri)
+
+            if (_finishedLinesList.Count > 0)
             {
-                if (FallingDown(entry) == true)
-                    couldFall = true;
+                int lowestRow = _finishedLinesList[^1];
+                foreach(var entry in LandedTetri)
+                {
+                    var (_, _, minY, maxY) = entry.GetRange();
+                    if (maxY < lowestRow)
+                    {
+                        entry.FallOne();
+                        couldFall = true;
+                    }
+                    if (minY > lowestRow)
+                    {
+                        if (FallingDown(entry) == true)
+                            couldFall = true;
+                    }
+                }
+                _finishedLinesList.RemoveAt(_finishedLinesList.Count - 1);
+                if (_finishedLinesList.Count > 0)
+                {
+                    for (int i = 0; i < _finishedLinesList.Count; i++)
+                    {
+                        _finishedLinesList[i]++;
+                    }                
+                }
             }
+
             return couldFall;
         }
 

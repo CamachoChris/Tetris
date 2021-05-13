@@ -52,10 +52,10 @@ namespace TetrisModel
             new Coord() { X = 2, Y = 2 },
         };
         private readonly Coord[] T = {
-            new Coord() { X = 2, Y = 1 },
+            new Coord() { X = 0, Y = 2 },
             new Coord() { X = 1, Y = 2 },
             new Coord() { X = 2, Y = 2 },
-            new Coord() { X = 3, Y = 2 },
+            new Coord() { X = 1, Y = 1 },
         };
     }
 }

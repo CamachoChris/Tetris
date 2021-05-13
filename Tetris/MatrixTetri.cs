@@ -10,6 +10,9 @@ namespace TetrisModel
         public bool[,] Matrix { get; private set; } = new bool[4, 4];
         public StandardTetriType StandardType;
 
+        private int _possibleRotations;
+        private int _currentState;
+
         public int PositionX;
         public int PositionY;
 
@@ -27,7 +30,9 @@ namespace TetrisModel
             {
                 StandardType = this.StandardType,
                 PositionX = this.PositionX,
-                PositionY = this.PositionY
+                PositionY = this.PositionY,
+                _currentState = this._currentState,
+                _possibleRotations = this._possibleRotations                
             };
 
             for (int x = 0; x < 4; x++)
@@ -57,6 +62,52 @@ namespace TetrisModel
 
         public void RotateLeft()
         {
+            if (_possibleRotations == 0)
+                return;
+
+            if (_possibleRotations == 1)
+            {
+                if (_currentState == 0)
+                {
+                    MatrixRotationLeft();
+                    _currentState = 1;
+                }
+                else if (_currentState == 1)
+                {
+                    MatrixRotationRight();
+                    _currentState = 0;
+                }
+            }
+
+            if (_possibleRotations == 4)
+                MatrixRotationLeft();
+        }
+
+        public void RotateRight()
+        {
+            if (_possibleRotations == 0)
+                return;
+
+            if (_possibleRotations == 1)
+            {
+                if (_currentState == 0)
+                {
+                    MatrixRotationRight();
+                    _currentState = 1;
+                }
+                else if (_currentState == 1)
+                {
+                    MatrixRotationLeft();
+                    _currentState = 0;
+                }
+            }
+
+            if (_possibleRotations == 4)
+                MatrixRotationRight();
+        }
+
+        private void MatrixRotationLeft()
+        {
             bool[,] rotatedMatrix = new bool[4, 4];
             for (int y = 0; y < 4; y++)
             {
@@ -68,7 +119,7 @@ namespace TetrisModel
             Matrix = rotatedMatrix;
         }
 
-        public void RotateRight()
+        private void MatrixRotationRight()
         {
             bool[,] rotatedMatrix = new bool[4, 4];
             for (int y = 0; y < 4; y++)
@@ -88,30 +139,37 @@ namespace TetrisModel
                 case StandardTetriType.I:
                     SetFromCoordArray(I);
                     StandardType = StandardTetriType.I;
+                    _possibleRotations = 1;
                     break;
                 case StandardTetriType.O:
                     SetFromCoordArray(O);
                     StandardType = StandardTetriType.O;
+                    _possibleRotations = 0;
                     break;
                 case StandardTetriType.L:
                     SetFromCoordArray(L);
                     StandardType = StandardTetriType.L;
+                    _possibleRotations = 4;
                     break;
                 case StandardTetriType.J:
                     SetFromCoordArray(J);
                     StandardType = StandardTetriType.J;
+                    _possibleRotations = 4;
                     break;
                 case StandardTetriType.S:
                     SetFromCoordArray(S);
                     StandardType = StandardTetriType.S;
+                    _possibleRotations = 1;
                     break;
                 case StandardTetriType.Z:
                     SetFromCoordArray(Z);
                     StandardType = StandardTetriType.Z;
+                    _possibleRotations = 1;
                     break;
                 case StandardTetriType.T:
                     SetFromCoordArray(T);
                     StandardType = StandardTetriType.T;
+                    _possibleRotations = 4;
                     break;
             }
         }

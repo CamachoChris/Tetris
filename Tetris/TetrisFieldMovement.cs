@@ -7,48 +7,11 @@ namespace TetrisModel
 {
     public partial class TetrisField
     {
-        /// <summary>
-        /// Does the whole work around finished lines
-        /// </summary>
-        /// <returns>Returns the amount of found finished lines</returns>
-        private int LineFinishCheck()
-        {
-            int currentFinishedLines = SeekAndDestroyFinishedLines();
-            if (currentFinishedLines > 0)
-            {
-                switch (currentFinishedLines)
-                {
-                    case 1:
-                        _score += 1;
-                        break;
-                    case 2:
-                        _score += 4;
-                        break;
-                    case 3:
-                        _score += 9;
-                        break;
-                    case 4:
-                        _score += 32;
-                        break;
-                }
-                TetriGameScoreChange(_score, EventArgs.Empty);
-
-                _finishedLinesCount += currentFinishedLines;
-                if (_finishedLinesCount / 5 + 1 > _level)
-                {
-                    _level = _finishedLinesCount / 5 + 1;
-                    SpeedUp();
-                    TetriGameLevelUp(_level, EventArgs.Empty);
-                }
-            }
-            return currentFinishedLines;
-        }
-
         public void MovingField()
         {
             if (!_gameRunning) return;
 
-            if (LetThemFall() || LineFinishCheck() > 0)
+            if (LetThemFall() || LineFinishCentral() > 0)
             {
                 if (TetriFieldChanged != null)
                     TetriFieldChanged(null, EventArgs.Empty);
@@ -58,9 +21,6 @@ namespace TetrisModel
         public void MoveDown()
         {
             if (!_gameRunning) return;
-
-            if (IsAnyFalling())
-                return;
 
             bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             if (gameOver)
@@ -72,6 +32,9 @@ namespace TetrisModel
 
                 return;
             }
+
+            if (IsAnyFalling())
+                return;
 
             bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
@@ -87,7 +50,7 @@ namespace TetrisModel
                 LandedTetri.Add(new CoordListingTetri(CurrentTetri));
 
                 PrepareForNextTetri();
-                LineFinishCheck();
+                LineFinishCentral();
 
                 if (TetriLanded != null)
                     TetriLanded(null, EventArgs.Empty);

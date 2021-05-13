@@ -37,7 +37,6 @@ namespace Tetris
         {
             InitializeComponent();
             tetrisField = new TetrisField(FieldSizeX, FieldSizeY);
-            tetrisField.Init();
 
             tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, tetrisField, SquareSize)
             {
@@ -47,11 +46,12 @@ namespace Tetris
             };
             PauseText.Visibility = Visibility.Hidden;
 
-            tetrisFieldMV.Init();
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            tetrisField.Init();
+            tetrisFieldMV.Init();
             tetrisField.Start();
         }
 

@@ -22,6 +22,9 @@ namespace Tetris
     {
         public readonly List<SquareMV> SquaresTetri = new List<SquareMV>();
 
+        readonly private Canvas _canvas;
+        readonly private int _squareSize;
+
         private CoordListingTetri _coordTetri;
         public CoordListingTetri CoordTetri
         {
@@ -32,10 +35,6 @@ namespace Tetris
                 SyncTetriLength();
             }
         }
-
-        readonly private Canvas _canvas;
-        readonly private int _squareSize;
-
 
         public TetriMV(Canvas canvas, int squareSize)
         {

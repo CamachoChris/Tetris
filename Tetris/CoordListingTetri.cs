@@ -8,30 +8,24 @@ namespace TetrisModel
     public class CoordListingTetri
     {
         public StandardTetriType TetriType;
-        public List<Coord> Listing;
+        public List<Coord> Listing = new List<Coord>();
         public bool IsFalling;
 
-        public CoordListingTetri()
-        {
-            Listing = new List<Coord>();
-        }
+        public CoordListingTetri() {}
 
-        public CoordListingTetri(MatrixTetri matrixTetri) : this()
+        public CoordListingTetri(MatrixTetri matrixTetri)
         {
             GetFromMatrix(matrixTetri, matrixTetri.PositionX, matrixTetri.PositionY);
         }
 
-        public CoordListingTetri(MatrixTetri matrixTetri, int positionX, int positionY) : this()
+        public CoordListingTetri(MatrixTetri matrixTetri, int positionX, int positionY)
         {
             GetFromMatrix(matrixTetri, positionX, positionY);
         }
 
         public CoordListingTetri GetCopy()
         {
-            CoordListingTetri copiedTetri = new CoordListingTetri
-            {
-                Listing = new List<Coord>()
-            };
+            CoordListingTetri copiedTetri = new CoordListingTetri();
 
             for (int i = 0; i < this.Listing.Count; i++)
             {
@@ -44,6 +38,7 @@ namespace TetrisModel
             }
 
             copiedTetri.TetriType = this.TetriType;
+            copiedTetri.IsFalling = this.IsFalling;
 
             return copiedTetri;
         }
@@ -55,9 +50,15 @@ namespace TetrisModel
                 Listing[i].Y++;
             }
         }
+        public void GetFromMatrix(MatrixTetri matrixTetri)
+        {
+            GetFromMatrix(matrixTetri, matrixTetri.PositionX, matrixTetri.PositionY);
+        }
 
         public void GetFromMatrix(MatrixTetri matrixTetri, int positionX, int positionY)
         {
+            Listing.Clear();
+
             TetriType = matrixTetri.StandardType;
 
             for (int y = 0; y < 4; y++)

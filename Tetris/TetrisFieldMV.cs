@@ -76,7 +76,7 @@ namespace Tetris
 
         private void UpdateCurrentTetri()
         {
-            currentTetri.CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri);
+            currentTetri.CoordTetri.GetFromMatrix(tetrisField.CurrentTetri);
             currentTetri.UpdateTetri();
         }
 

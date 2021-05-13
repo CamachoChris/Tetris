@@ -20,57 +20,56 @@ namespace Tetris
 {
     class SquareMV
     {
-        private readonly int SquareSize;
+        private readonly int _squareSize;
         private readonly Canvas _canvas;
 
-        private Rectangle Square;
+        private Rectangle _square;
+        private Brush _tetriColor;
 
         public int PositionX;
         public int PositionY;
-        private Brush _tetriColor;
 
-        public SquareMV() { }
-
-        public SquareMV(Canvas canvas, int squareSize) : this()
+        public SquareMV(Canvas canvas, int squareSize)
         {
             _canvas = canvas;
-            SquareSize = squareSize;
+            _squareSize = squareSize;
 
             AddRectangleToCanvas();
         }
 
         private void AddRectangleToCanvas()
         {
-            Square = new Rectangle()
+            _square = new Rectangle()
             {
-                Height = SquareSize,
-                Width = SquareSize,
+                Height = _squareSize,
+                Width = _squareSize,
                 RadiusX = 5,
                 RadiusY = 5,
                 Fill = Brushes.Transparent
             };
 
-            _canvas.Children.Add(Square);
+            _canvas.Children.Add(_square);
         }
 
         public void RemoveSquareFromCanvas()
         {
-            _canvas.Children.Remove(Square);
-            Square = null;
+            _canvas.Children.Remove(_square);
+            _square = null;
         }
 
         public void ChangeVisibility(Visibility visibility)
         {
-            Square.Visibility = visibility;
+            _square.Visibility = visibility;
         }
 
         public void UpdateSquare()
         {
             if (PositionY >= 0)
-                Square.Fill = _tetriColor;
+                _square.Fill = _tetriColor;
             else
-                Square.Fill = Brushes.Transparent;
-            Square.Margin = new Thickness(PositionX * SquareSize, PositionY * SquareSize, 0, 0);
+                _square.Fill = Brushes.Transparent;
+
+            _square.Margin = new Thickness(PositionX * _squareSize, PositionY * _squareSize, 0, 0);
         }
 
         public void SetTetriColor(CoordListingTetri tetri)

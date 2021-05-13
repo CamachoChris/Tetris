@@ -16,10 +16,10 @@ namespace TetrisModel
     public partial class MatrixTetri
     {
         private readonly Coord[] I = {
-            new Coord() { X = 2, Y = 0 },
+            new Coord() { X = 0, Y = 1 },
+            new Coord() { X = 1, Y = 1 },
             new Coord() { X = 2, Y = 1 },
-            new Coord() { X = 2, Y = 2 },
-            new Coord() { X = 2, Y = 3 },
+            new Coord() { X = 3, Y = 1 },
         };
         private readonly Coord[] O = {
             new Coord() { X = 1, Y = 1 },

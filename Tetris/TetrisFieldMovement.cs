@@ -43,9 +43,10 @@ namespace TetrisModel
         {
             if (!_gameRunning) return;
 
-            LineFinishCheck();
             if (LetThemFall() && TetriFieldChanged != null)
                 TetriFieldChanged(null, EventArgs.Empty);
+
+            LineFinishCheck();
 
             bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             if (gameOver)

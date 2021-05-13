@@ -13,6 +13,9 @@ namespace TetrisModel
         public MatrixTetri CurrentTetri { get; private set; }
         public MatrixTetri NextTetri { get; private set; }
 
+        public bool IsGameRunning { get; private set; }
+        public bool IsGameOver { get; private set; }
+
         public event EventHandler TetriMoved;
         public event EventHandler TetriLanded;
         public event EventHandler TetriFieldChanged;
@@ -23,9 +26,6 @@ namespace TetrisModel
         public event EventHandler TetriGameLevelUp;
         public event EventHandler TetriGameScoreChange;
 
-        private bool _gameRunning;
-        private bool _gameOver;
-
         private int _gameSpeed;
         private int _finishedLinesCount;
         private int _level;
@@ -34,7 +34,7 @@ namespace TetrisModel
         readonly private System.Timers.Timer tick = new System.Timers.Timer();
 
         public List<CoordListingTetri> LandedTetri { get; private set; } = new List<CoordListingTetri>();
-        private List<int> _finishedLinesList = new List<int>();
+        readonly private List<int> _finishedLinesList = new List<int>();
 
         public TetrisField(int fieldSizeX, int fieldSizeY)
         {
@@ -55,8 +55,8 @@ namespace TetrisModel
 
             LandedTetri.Clear();
 
-            _gameRunning = false;
-            _gameOver = false;
+            IsGameRunning = false;
+            IsGameOver = false;
 
             _gameSpeed = 600;
             _finishedLinesCount = 0;
@@ -82,13 +82,13 @@ namespace TetrisModel
 
         public void Start()
         {
-            if (_gameOver)
+            if (IsGameOver)
                 return;
 
-            if (!_gameRunning)
+            if (!IsGameRunning)
             {
                 tick.Enabled = true;
-                _gameRunning = true;
+                IsGameRunning = true;
             }
             else
             {
@@ -101,11 +101,6 @@ namespace TetrisModel
                     UnpauseGame();
                 }
             }
-        }
-
-        public bool IsGameRunning()
-        {
-            return _gameRunning;
         }
 
         public void PauseGame()
@@ -142,7 +137,7 @@ namespace TetrisModel
 
         private void GameOver()
         {
-            _gameRunning = false;
+            IsGameRunning = false;
             tick.Stop();
         }
 

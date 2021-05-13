@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris"
         mc:Ignorable="d"
-        Title="Tetris" Height="620" Width="520" Background="LightSkyBlue" KeyDown="Window_KeyDown" Closing="Window_Closing">
+        Title="Tetris" Height="620" Width="520" Background="LightSkyBlue" KeyDown="Window_KeyDown" Closing="Window_Closing" Deactivated="Window_Deactivated">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -23,8 +23,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="150"/>
             </Grid.ColumnDefinitions>
-            <Canvas x:Name="PlayingCanvas" Height="540" Width="300" Background="AliceBlue">
-                <TextBlock x:Name="PauseText" Canvas.Left="28" Canvas.Top="177" Text="Game Paused" FontSize="30" TextAlignment="Center" Height="52" Width="245" FontWeight="Bold"/>
+            <Canvas x:Name="PlayingCanvas" Height="540" Width="300" Background="AliceBlue" />
+            <Canvas x:Name="TextCanvas" Height="540" Width="300" Background="Transparent">
+                <TextBlock x:Name="PauseText" Canvas.Left="28" Canvas.Top="177" Text="Game Paused" FontSize="35" TextAlignment="Center" Height="52" Width="245" FontWeight="ExtraBold"/>
             </Canvas>
             <StackPanel Grid.Column="1">
                 <TextBlock Text="Level:" Margin="0,30,0,0" TextAlignment="Center" />

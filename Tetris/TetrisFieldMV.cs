@@ -23,10 +23,12 @@ namespace Tetris
 
         private readonly Canvas TetrisCanvas;
         private readonly Canvas TeaserCanvas;
+        private readonly Canvas TextCanvas;
+
         private readonly TetrisField tetrisField;
         
-        private TetriMV currentTetri;
-        private TetriMV nextTetri;
+        readonly private TetriMV currentTetri;
+        readonly private TetriMV nextTetri;
 
         public TextBlock PauseText;
         public TextBlock LevelText;
@@ -34,12 +36,16 @@ namespace Tetris
 
         private readonly List<SquareMV> LandedSquaresMV = new List<SquareMV>();
 
-        public TetrisFieldMV(Canvas canvas, Canvas teasercanvas, TetrisField field, int squaresize)
+        public TetrisFieldMV(Canvas canvas, Canvas teaserCanvas, Canvas textCanvas, TetrisField field, int squaresize)
         {
             TetrisCanvas = canvas;
-            TeaserCanvas = teasercanvas;
+            TeaserCanvas = teaserCanvas;
+            TextCanvas = textCanvas;
             tetrisField = field;
             SquareSize = squaresize;
+
+            currentTetri = new TetriMV(canvas, squaresize);
+            nextTetri = new TetriMV(teaserCanvas, squaresize);
 
             field.TetriMoved += Field_TetriMoved;
             field.TetriLanded += TetrisEvent_TetriLanded;
@@ -52,32 +58,28 @@ namespace Tetris
             field.TetriGameScoreChange += Field_TetriGameScoreChange;
         }
 
-        private void MakeNewCurrent()
+        private void UpdateTetri(TetriMV tetriMV, MatrixTetri matrixTetri)
         {
-            currentTetri = new TetriMV(TetrisCanvas, SquareSize)
-            {
-                CoordTetri = new CoordListingTetri(tetrisField.CurrentTetri)
-            };
-
-            currentTetri.UpdateTetri();
+            tetriMV.CoordTetri.GetFromMatrix(matrixTetri);
+            tetriMV.UpdateTetri();
         }
 
-        private void MakeNewNext()
+        private void UpdateField()
         {
-            TeaserCanvas.Children.Clear();
+            SyncLandedList();
 
-            nextTetri = new TetriMV(TeaserCanvas, SquareSize)
+            int i = 0;
+            foreach (var entry in tetrisField.LandedTetri)
             {
-                CoordTetri = new CoordListingTetri(tetrisField.NextTetri)
-            };
-
-            nextTetri.UpdateTetri();
-        }
-
-        private void UpdateCurrentTetri()
-        {
-            currentTetri.CoordTetri.GetFromMatrix(tetrisField.CurrentTetri);
-            currentTetri.UpdateTetri();
+                for (int j = 0; j < entry.Listing.Count; j++)
+                {
+                    LandedSquaresMV[i].PositionX = entry.Listing[j].X;
+                    LandedSquaresMV[i].PositionY = entry.Listing[j].Y;
+                    LandedSquaresMV[i].SetTetriColor(entry);
+                    LandedSquaresMV[i].UpdateSquare();
+                    i++;
+                }
+            }
         }
 
         private void SyncLandedList()
@@ -104,48 +106,45 @@ namespace Tetris
             }
         }
 
-        private void UpdateField()
-        {
-            SyncLandedList();
-
-            int i = 0;
-            foreach (var entry in tetrisField.LandedTetri)
-            {
-                for (int j = 0; j < entry.Listing.Count; j++)
-                {
-                    LandedSquaresMV[i].PositionX = entry.Listing[j].X;
-                    LandedSquaresMV[i].PositionY = entry.Listing[j].Y;
-                    LandedSquaresMV[i].SetTetriColor(entry);
-                    LandedSquaresMV[i].UpdateSquare();
-                    i++;
-                }
-            }
-        }
-
         public void Init()
         {
-            MakeNewCurrent();
-            MakeNewNext();
+            AllElementsToNormalMode();
+            UpdateTetri(currentTetri, tetrisField.CurrentTetri);
+            UpdateTetri(nextTetri, tetrisField.NextTetri);
+            UpdateField();
         }
 
         private void AllElementsToNormalMode()
         {
             PauseText.Visibility = Visibility.Hidden;
 
-            foreach (var entry in LandedSquaresMV)
-                entry.ChangeVisibility(Visibility.Visible);
-
-            foreach (var entry in currentTetri.SquaresTetri)
-                entry.ChangeVisibility(Visibility.Visible);
-
-            foreach (var entry in nextTetri.SquaresTetri)
-                entry.ChangeVisibility(Visibility.Visible);
+            ShowElements();
         }
 
         private void AllElementsInPauseMode()
         {
             PauseText.Visibility = Visibility.Visible;
 
+            HideElements();
+        }
+
+        public void ShowElements()
+        {
+            foreach (var entry in LandedSquaresMV)
+                entry.ChangeVisibility(Visibility.Visible);
+
+            foreach (var entry in currentTetri.SquaresTetri)
+                entry.ChangeVisibility(Visibility.Visible);
+
+            foreach (var entry in nextTetri.SquaresTetri)
+                entry.ChangeVisibility(Visibility.Visible);
+
+            LevelText.Visibility = Visibility.Visible;
+            ScoreText.Visibility = Visibility.Visible;
+        }
+
+        public void HideElements()
+        {
             foreach (var entry in LandedSquaresMV)
                 entry.ChangeVisibility(Visibility.Hidden);
 
@@ -154,6 +153,9 @@ namespace Tetris
 
             foreach (var entry in nextTetri.SquaresTetri)
                 entry.ChangeVisibility(Visibility.Hidden);
+
+            LevelText.Visibility = Visibility.Hidden;
+            ScoreText.Visibility = Visibility.Hidden;
         }
     }
 }

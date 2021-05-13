@@ -25,7 +25,7 @@ namespace Tetris
         readonly private Canvas _canvas;
         readonly private int _squareSize;
 
-        private CoordListingTetri _coordTetri;
+        private CoordListingTetri _coordTetri = new CoordListingTetri();
         public CoordListingTetri CoordTetri
         {
             get => _coordTetri;

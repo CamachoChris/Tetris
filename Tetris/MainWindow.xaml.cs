@@ -22,7 +22,7 @@ namespace Tetris
     public partial class MainWindow : Window
     {
         const string AppName = "Tetris";
-        const string Version = "0.1.0";
+        const string Version = "0.1.1";
         const string Developer = "Grimakar";
         const string TimeOfDevelopment = "May 2021";
 
@@ -31,37 +31,44 @@ namespace Tetris
         const int FieldSizeY = 18; //vertical
 
         readonly TetrisField tetrisField;
-        readonly TetrisFieldMV tetrisFieldMV;        
+        readonly TetrisFieldMV tetrisFieldMV;
 
         public MainWindow()
         {
             InitializeComponent();
             tetrisField = new TetrisField(FieldSizeX, FieldSizeY);
 
-            tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, tetrisField, SquareSize)
+            tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, TextCanvas, tetrisField, SquareSize)
             {
                 LevelText = LevelText,
                 ScoreText = ScoreText,
                 PauseText = PauseText
             };
             PauseText.Visibility = Visibility.Hidden;
-
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            tetrisField.Init();
-            tetrisFieldMV.Init();
+            if (!tetrisField.IsGameRunning || tetrisField.IsGameOver)
+            {
+                tetrisField.Init();
+                tetrisFieldMV.Init();
+                tetrisFieldMV.ShowElements();
+            }
             tetrisField.Start();
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
+            PauseText.Text = "Game Paused";
+            PauseText.Visibility = Visibility.Hidden;
             tetrisField.Reset();
+            tetrisFieldMV.HideElements();
         }
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
+            tetrisField.Start();
             MessageBox.Show(this, $"{AppName}\n{Version}\n{TimeOfDevelopment} {Developer}.\nNo rights reserved...", $"About {AppName}");
         }
 
@@ -99,7 +106,7 @@ namespace Tetris
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (tetrisField.IsGameRunning())
+            if (tetrisField.IsGameRunning)
                 tetrisField.PauseGame();
 
             MessageBoxResult result = MessageBox.Show("Really quit?", "Quit?", MessageBoxButton.YesNo);
@@ -107,6 +114,12 @@ namespace Tetris
             {
                 e.Cancel = true;
             }
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            if (tetrisField.IsGameRunning)
+                tetrisField.PauseGame();
         }
     }
 }

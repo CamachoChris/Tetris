@@ -23,7 +23,7 @@ namespace Tetris
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
-                UpdateCurrentTetri();
+                UpdateTetri(currentTetri, tetrisField.CurrentTetri);
             }));
         }
 
@@ -31,9 +31,8 @@ namespace Tetris
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
-                UpdateCurrentTetri();
-                MakeNewCurrent();
-                MakeNewNext();
+                UpdateTetri(currentTetri, tetrisField.CurrentTetri);
+                UpdateTetri(nextTetri, tetrisField.NextTetri);
                 UpdateField();
             }));
         }
@@ -49,8 +48,9 @@ namespace Tetris
         private void Field_TetriGameOver(object sender, EventArgs e)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-            {
-                MessageBox.Show("Game Over");
+            {                
+                PauseText.Text = "Game Over";
+                PauseText.Visibility = Visibility.Visible;
             }));
         }
 
@@ -67,9 +67,7 @@ namespace Tetris
 
         private void Field_TetriGameReset(object sender, EventArgs e)
         {
-            AllElementsToNormalMode();
-            UpdateCurrentTetri();
-            UpdateField();
+            Init();
         }
 
         private void Field_TetriGameLevelUp(object sender, EventArgs e)

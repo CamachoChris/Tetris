@@ -9,7 +9,7 @@ namespace TetrisModel
     {
         public void MovingField()
         {
-            if (!_gameRunning) return;
+            if (!IsGameRunning) return;
 
             if (LetThemFall() || LineFinishCentral() > 0)
             {
@@ -20,7 +20,7 @@ namespace TetrisModel
 
         public void MoveDown()
         {
-            if (!_gameRunning) return;
+            if (!IsGameRunning) return;
 
             bool gameOver = GameOverCheck(CurrentTetri, CurrentTetri.PositionX, CurrentTetri.PositionY + 1);
             if (gameOver)
@@ -59,7 +59,7 @@ namespace TetrisModel
 
         public void MoveLeft()
         {
-            if (!_gameRunning) return;
+            if (!IsGameRunning) return;
 
             bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY);
             bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX - 1, CurrentTetri.PositionY);
@@ -75,7 +75,7 @@ namespace TetrisModel
 
         public void MoveRight()
         {
-            if (!_gameRunning) return;
+            if (!IsGameRunning) return;
 
             bool borderCollision = CollisionWithBorder(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY);
             bool squareCollision = CollisionWithSquare(CurrentTetri, CurrentTetri.PositionX + 1, CurrentTetri.PositionY);
@@ -91,7 +91,7 @@ namespace TetrisModel
 
         public void RotateRight()
         {
-            if (!_gameRunning) return;
+            if (!IsGameRunning) return;
 
             var (collision, moveValue) = RightRotationCollision(CurrentTetri);
 
@@ -107,7 +107,7 @@ namespace TetrisModel
 
         public void RotateLeft()
         {
-            if (!_gameRunning) return;
+            if (!IsGameRunning) return;
 
             var (collision, moveValue) = LeftRotationCollision(CurrentTetri);
 

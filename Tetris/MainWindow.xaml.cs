@@ -68,7 +68,8 @@ namespace Tetris
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
-            tetrisField.Start();
+            if (tetrisField.IsGameRunning)
+                tetrisField.PauseGame();
             MessageBox.Show(this, $"{AppName}\n{Version}\n{TimeOfDevelopment} {Developer}.\nNo rights reserved...", $"About {AppName}");
         }
 

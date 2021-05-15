@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TetrisModel;
+using Highscores;
 
 namespace Tetris
 {
@@ -22,9 +23,10 @@ namespace Tetris
     public partial class MainWindow : Window
     {
         const string AppName = "Tetris";
-        const string Version = "0.1.1";
+        const string Version = "0.2.0";
         const string Developer = "Grimakar";
         const string TimeOfDevelopment = "May 2021";
+        const string HighscoreFilename = "hs.dat";
 
         const int SquareSize = 30;
         const int FieldSizeX = 10; //horizontal
@@ -42,7 +44,8 @@ namespace Tetris
             {
                 LevelText = LevelText,
                 ScoreText = ScoreText,
-                PauseText = PauseText
+                PauseText = PauseText,
+                HighscoreFilename = HighscoreFilename
             };
             PauseText.Visibility = Visibility.Hidden;
         }
@@ -64,18 +67,6 @@ namespace Tetris
             PauseText.Visibility = Visibility.Hidden;
             tetrisField.Reset();
             tetrisFieldMV.HideElements();
-        }
-
-        private void MenuAbout_Click(object sender, RoutedEventArgs e)
-        {
-            if (tetrisField.IsGameRunning)
-                tetrisField.PauseGame();
-            MessageBox.Show(this, $"{AppName}\n{Version}\n{TimeOfDevelopment} {Developer}.\nNo rights reserved...", $"About {AppName}");
-        }
-
-        private void MenuQuit_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -121,6 +112,28 @@ namespace Tetris
         {
             if (tetrisField.IsGameRunning)
                 tetrisField.PauseGame();
+        }
+
+        private void MenuHighscore_Click(object sender, RoutedEventArgs e)
+        {
+            if (tetrisField.IsGameRunning)
+                tetrisField.PauseGame();
+
+            HighscoreWindow highscoreWindow = new HighscoreWindow(9999, 0, "TetrisHighscore", HighscoreFilename);
+            highscoreWindow.Owner = this;
+            highscoreWindow.Show();
+        }
+
+        private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            if (tetrisField.IsGameRunning)
+                tetrisField.PauseGame();
+            MessageBox.Show(this, $"{AppName}\n{Version}\n{TimeOfDevelopment} {Developer}.\nNo rights reserved...", $"About {AppName}");
+        }
+
+        private void MenuQuit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

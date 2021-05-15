@@ -34,6 +34,8 @@ namespace Tetris
         public TextBlock LevelText;
         public TextBlock ScoreText;
 
+        public string HighscoreFilename;
+
         private readonly List<SquareMV> LandedSquaresMV = new List<SquareMV>();
 
         public TetrisFieldMV(Canvas canvas, Canvas teaserCanvas, Canvas textCanvas, TetrisField field, int squaresize)

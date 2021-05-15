@@ -13,6 +13,7 @@
         </Grid.RowDefinitions>
         <Menu Background="LightSkyBlue" Focusable="False">
             <MenuItem Background="LightSkyBlue" Header="_Menu">
+                <MenuItem Foreground="Black" Header="_Highscore" x:Name="MenuHighscore" Click="MenuHighscore_Click"/>
                 <MenuItem Foreground="Black" Header="_About" x:Name="MenuAbout" Click="MenuAbout_Click"/>
                 <Separator/>
                 <MenuItem Foreground="Black" Header="_Quit" x:Name="MenuQuit" Click="MenuQuit_Click"/>

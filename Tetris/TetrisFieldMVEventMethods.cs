@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TetrisModel;
+using Highscores;
 using System.Diagnostics;
 
 namespace Tetris
@@ -51,6 +52,11 @@ namespace Tetris
             {                
                 PauseText.Text = "Game Over";
                 PauseText.Visibility = Visibility.Visible;
+
+                HighscoreWindow highscoreWindow = new HighscoreWindow(9999, 0, "TetrisHighscore", HighscoreFilename);
+                highscoreWindow.Owner = Application.Current.MainWindow;
+                highscoreWindow.Show();
+                highscoreWindow.TryAdd(int.Parse(ScoreText.Text));
             }));
         }
 

@@ -53,7 +53,7 @@ namespace Tetris
                 PauseText.Text = "Game Over";
                 PauseText.Visibility = Visibility.Visible;
 
-                HighscoreWindow highscoreWindow = new HighscoreWindow(9999, 0, "TetrisHighscore", HighscoreFilename);
+                HighscoreWindow highscoreWindow = new HighscoreWindow(999999, 0, "Tetris Highscore", HighscoreFilename);
                 highscoreWindow.Owner = Application.Current.MainWindow;
                 highscoreWindow.Show();
                 highscoreWindow.TryAdd(int.Parse(ScoreText.Text));

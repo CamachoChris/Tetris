@@ -17,9 +17,7 @@ using Highscores;
 
 namespace Tetris
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    //Dieser Text ist für Ori^^
     public partial class MainWindow : Window
     {
         const string AppName = "Tetris";

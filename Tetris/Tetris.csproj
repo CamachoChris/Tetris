@@ -6,4 +6,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="soundChangeRotation.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="soundChangeRotation.wav" />
+  </ItemGroup>
+
 </Project>

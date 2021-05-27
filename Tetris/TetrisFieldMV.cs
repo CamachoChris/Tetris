@@ -106,8 +106,8 @@ namespace Tetris
                     LandedSquaresMV[^1].RemoveSquareFromCanvas();
                     LandedSquaresMV.RemoveAt(LandedSquaresMV.Count - 1);
                 }
-                SoundPlayer Snd = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundLineCleared.wav");
-                Snd.PlaySync();
+                Troll_SoundHandler(7);
+
             }
         }
 

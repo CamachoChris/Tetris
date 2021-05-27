@@ -8,10 +8,40 @@
 
   <ItemGroup>
     <None Remove="soundChangeRotation.wav" />
+    <None Remove="Sound\soundEasterEgg.wav" />
+    <None Remove="Sound\soundGameover.wav" />
+    <None Remove="Sound\soundGroundConnect.wav" />
+    <None Remove="Sound\soundHighscore.wav" />
+    <None Remove="Sound\soundLineCleared.wav" />
+    <None Remove="Sound\soundPause.wav" />
+    <None Remove="Sound\soundSpeedIncreased.wav" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="soundChangeRotation.wav" />
+    <Content Include="Sound\soundChangeRotation.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\soundEasterEgg.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\soundGameover.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\soundGroundConnect.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\soundHighscore.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\soundLineCleared.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\soundSpeedIncreased.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\soundPause.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -16,6 +16,7 @@ using TetrisModel;
 using Highscores;
 using System.Diagnostics;
 using System.Media;
+using System.IO;
 
 namespace Tetris
 {
@@ -27,8 +28,7 @@ namespace Tetris
             {
                 UpdateTetri(currentTetri, tetrisField.CurrentTetri);
             }));
-               SoundPlayer Snd = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundChangeRotation.wav");
-               Snd.Play();
+            Troll_SoundHandler(2);
         }
 
         private void TetrisEvent_TetriLanded(object sender, EventArgs e)
@@ -38,8 +38,7 @@ namespace Tetris
                 UpdateTetri(currentTetri, tetrisField.CurrentTetri);
                 UpdateTetri(nextTetri, tetrisField.NextTetri);
                 UpdateField();
-                   SoundPlayer Snd = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundGroundConnect.wav");
-                   Snd.PlaySync();
+                Troll_SoundHandler(3);
             }));
         }
 
@@ -56,15 +55,14 @@ namespace Tetris
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
                 PauseText.Text = "Game Over";
-                   SoundPlayer Snd = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundGameover.wav");
-                   Snd.PlaySync();
+
+                Troll_SoundHandler(5);
                 PauseText.Visibility = Visibility.Visible;
 
                 HighscoreWindow highscoreWindow = new HighscoreWindow(999999, 0, "Tetris Highscore", HighscoreFilename);
                 highscoreWindow.Owner = Application.Current.MainWindow;
                 highscoreWindow.Show();
-                SoundPlayer Snd2 = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundHighscore.wav");
-                Snd2.PlaySync();
+                Troll_SoundHandler(6);
                 highscoreWindow.TryAdd(int.Parse(ScoreText.Text));
             }));
         }
@@ -78,17 +76,13 @@ namespace Tetris
         private void Field_TetriGamePaused(object sender, EventArgs e)
         {
             AllElementsInPauseMode();
-            // TEST
-         //   SoundPlayer Snd = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundChangeRotation.wav");
-         //   Snd.Play();
-          
-                 }
+            Troll_SoundHandler(4);
+        }
 
         private void Field_TetriGameReset(object sender, EventArgs e)
         {
             Init();
-            SoundPlayer Snd = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundStartNewgame.wav");
-            Snd.Play();
+
         }
 
         private void Field_TetriGameLevelUp(object sender, EventArgs e)
@@ -97,8 +91,9 @@ namespace Tetris
             {
                 LevelText.Text = string.Format($"{(int)sender}");
             }));
-               SoundPlayer Snd = new SoundPlayer(@"G:\0 Proggen 2021\Tetris2\Tetris\soundSpeedIncreased.wav");
-               Snd.PlaySync();
+
+            Troll_SoundHandler(1);
+
         }
 
         private void Field_TetriGameScoreChange(object sender, EventArgs e)
@@ -108,5 +103,79 @@ namespace Tetris
                 ScoreText.Text = string.Format($"{(int)sender}");
             }));
         }
+
+        public void Troll_SoundHandler(int whichSound) // Public weil andere Klasse drauf zugreift. Ruhe.
+        {
+            string soundFile;
+            string basePath = Environment.CurrentDirectory + @"\Sound";
+            string soundPath;
+
+            SoundPlayer Snd;
+
+            switch(whichSound)
+                {
+                case 1:
+                    {
+                        soundFile = @"\soundSpeedIncreased.wav";
+                        soundPath = basePath + soundFile;
+                        Snd = new SoundPlayer(soundPath);
+                        Snd.PlaySync();// Play mit Threadfreeze
+                        break;
+                    }
+                case 2:
+                    {
+                        soundFile = @"\soundChangeRotation.wav";
+                        soundPath = basePath + soundFile;
+                        Snd = new SoundPlayer(soundPath);
+                        Snd.Play(); // Play ohne Threadfreeze
+                        break;
+                    }
+                case 3:
+                    {
+                        soundFile = @"\soundGroundConnect.wav";
+                        soundPath = basePath + soundFile;
+                        Snd = new SoundPlayer(soundPath);
+                        Snd.PlaySync();
+                        break;
+                    }
+                case 4:
+                    {
+                        soundFile = @"\soundPause.wav";
+                        soundPath = basePath + soundFile;
+                        Snd = new SoundPlayer(soundPath);
+                        Snd.Play();
+                        break;
+                    }
+                case 5:
+                    {
+                        soundFile = @"\soundGameover.wav";
+                        soundPath = basePath + soundFile;
+                        Snd = new SoundPlayer(soundPath);
+                        Snd.PlaySync();
+                        break;
+                    }
+                case 6:
+                    {
+                        soundFile = @"\soundHighscore.wav";
+                        soundPath = basePath + soundFile;
+                        Snd = new SoundPlayer(soundPath);
+                        Snd.PlaySync();
+                        break;
+                    }
+                case 7:
+                    {
+                        soundFile = @"\soundLineCleared.wav";
+                        soundPath = basePath + soundFile;
+                        Snd = new SoundPlayer(soundPath);
+                        Snd.PlaySync();
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+
     }
 }

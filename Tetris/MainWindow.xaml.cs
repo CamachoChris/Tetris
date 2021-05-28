@@ -38,6 +38,7 @@ namespace Tetris
         public MainWindow()
         {
             InitializeComponent();
+            SoundHandler.initSoundHandler();
             tetrisField = new TetrisField(FieldSizeX, FieldSizeY);
 
             tetrisFieldMV = new TetrisFieldMV(PlayingCanvas, TeaserCanvas, TextCanvas, tetrisField, SquareSize)
@@ -45,7 +46,8 @@ namespace Tetris
                 LevelText = LevelText,
                 ScoreText = ScoreText,
                 PauseText = PauseText,
-                HighscoreFilename = HighscoreFilename
+                HighscoreFilename = HighscoreFilename,
+                        
             };
             PauseText.Visibility = Visibility.Hidden;
         }
@@ -57,6 +59,7 @@ namespace Tetris
                 tetrisField.Init();
                 tetrisFieldMV.Init();
                 tetrisFieldMV.ShowElements();
+                debugSound.Content = SoundHandler.debugLabel;
             }
             tetrisField.Start();
         }

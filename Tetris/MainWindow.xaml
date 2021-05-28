@@ -37,6 +37,11 @@
                 <Canvas x:Name="TeaserCanvas" Height="120" Width="120" Background="AliceBlue"/>
                 <Button x:Name="StartButton" Content="Start/Pause" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,90,0,10" Click="StartButton_Click" />
                 <Button x:Name="ResetButton" Content="Reset" Height="40" Width="70" Foreground="DeepSkyBlue" Background="AliceBlue" Margin="0,10,0,30" Click="ResetButton_Click" />
+                <Label x:Name="debugSound" Content="debug">
+                    <Label.DataContext>
+                        <local:SoundHandler/>
+                    </Label.DataContext>
+                </Label>
             </StackPanel>
         </Grid>
     </Grid>

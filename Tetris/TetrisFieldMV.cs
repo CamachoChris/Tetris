@@ -106,13 +106,14 @@ namespace Tetris
                     LandedSquaresMV[^1].RemoveSquareFromCanvas();
                     LandedSquaresMV.RemoveAt(LandedSquaresMV.Count - 1);
                 }
-                Troll_SoundHandler(7);
+                SoundHandler.playSound("LineCleared.wav");
 
             }
         }
 
         public void Init()
         {
+            
             AllElementsToNormalMode();
             UpdateTetri(currentTetri, tetrisField.CurrentTetri);
             UpdateTetri(nextTetri, tetrisField.NextTetri);

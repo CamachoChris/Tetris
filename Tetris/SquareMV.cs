@@ -35,6 +35,7 @@ namespace Tetris
             _squareSize = squareSize;
 
             AddRectangleToCanvas();
+ 
         }
 
         private void AddRectangleToCanvas()
